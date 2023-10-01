@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameOfLife
+﻿namespace GameOfLife.Interfaces
 {
     internal interface IEntity
     {
-        int[] Position { get; }
+
+
+        int XCoordinate { get; }
+        int YCoordinate { get; }
         void EndOfTurn();
         char Display { get; }
     }

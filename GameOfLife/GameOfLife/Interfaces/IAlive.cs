@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameOfLife
+﻿namespace GameOfLife.Interfaces
 {
     internal interface IAlive : IEntity
     {
-        int Speed { get; set; }
+        int Speed { get; }
         void Move();
     }
 }

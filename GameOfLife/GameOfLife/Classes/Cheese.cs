@@ -1,4 +1,6 @@
-﻿namespace GameOfLife;
+﻿using GameOfLife.Interfaces;
+
+namespace GameOfLife.Classes;
 
 public class Cheese : IEdible
 {
@@ -16,7 +18,9 @@ public class Cheese : IEdible
             };
         }
     } 
-    public int[] Position { get; }
+    public int XCoordinate { get; }
+    public int YCoordinate { get; }
+
     public void EndOfTurn()
     {
         FoodPoints++;
@@ -38,9 +42,10 @@ public class Cheese : IEdible
         FoodPoints = 0;
     }
 
-    public Cheese(int[] position)
+    public Cheese(int xCoordinate, int yCoordinate)
     {
-        Position = position;
+        XCoordinate = xCoordinate;
+        YCoordinate = yCoordinate;
         FoodPoints = 1;
     }
 }
