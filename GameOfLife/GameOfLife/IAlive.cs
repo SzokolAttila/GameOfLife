@@ -8,7 +8,6 @@ namespace GameOfLife
 {
     internal interface IAlive : IEntity
     {
-        int TurnsLived { get; set; }
         int Speed { get; set; }
         void Move();
     }

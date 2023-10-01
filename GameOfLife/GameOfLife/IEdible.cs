@@ -8,7 +8,7 @@ namespace GameOfLife
 {
     internal interface IEdible : IEntity
     {
-        int FoodPoints { get; set; }
+        int FoodPoints { get; }
         void Death();
     }
 }

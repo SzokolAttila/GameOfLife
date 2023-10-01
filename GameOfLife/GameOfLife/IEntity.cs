@@ -8,8 +8,8 @@ namespace GameOfLife
 {
     internal interface IEntity
     {
-        int[] Position { get; set; }
+        int[] Position { get; }
         void EndOfTurn();
-        char Display { get; set; }
+        char Display { get; }
     }
 }
