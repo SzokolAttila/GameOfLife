@@ -48,6 +48,6 @@ public class Cheese : IEdible
     {
         XCoordinate = xCoordinate;
         YCoordinate = yCoordinate;
-        FoodPoints = 1;
+        FoodPoints = 0;
     }
 }
