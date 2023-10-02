@@ -1,0 +1,5 @@
+D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.csproj.AssemblyReference.cache
+D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.AssemblyInfoInputs.cache
+D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.AssemblyInfo.cs
+D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.csproj.CoreCompileInputs.cache

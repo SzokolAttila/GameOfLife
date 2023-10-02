@@ -1,55 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameOfLife.Classes;
-using GameOfLife.Interfaces;
+﻿using GameOfLife.Interfaces;
 
-namespace GameOfLife
+namespace GameOfLife.Classes
 {
     internal class Mouse : IAnimals
     {
-        List<List<IEntity>> Map = new List<List<IEntity>>(); // just for now; 3 dimensional List?
-
         public Mouse(int x, int y)
         {
-            MaxFoodPoints = 7;
             FoodPoints = 3;
             TurnsLived = 0;
             Speed = 1;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
-            Map[y][x] = this;
+            Grid.Map[y, x][x] = this;
         }
 
-        private int maxFoodPoints;
-        public int MaxFoodPoints
-        {
-            get => maxFoodPoints;
-            set
-            {
-                if (value >= 7)
-                {
-                    maxFoodPoints = 7;
-                }
-                else
-                {
-                    maxFoodPoints = value;
-                }
-            }
-        }
-
-        private int foodPoints;
+        private const int MaxFoodPoints = 7;
+        private int _foodPoints;
         public int FoodPoints
         {
-            get => foodPoints;
-            set
+            get => _foodPoints;
+            private set
             {
                 if (value >= MaxFoodPoints)
                 {
-                    foodPoints = MaxFoodPoints;
+                    _foodPoints = MaxFoodPoints;
                 }
                 else if (value <= 0)
                 {
@@ -57,21 +32,12 @@ namespace GameOfLife
                 }
                 else
                 {
-                    foodPoints = value;
+                    _foodPoints = value;
                 }
             }
         }
         public int TurnsLived { get; set; }
-
-        private int speed;
-        public int Speed
-        {
-            get => speed;
-            set
-            {
-                speed = 1;
-            }
-        }
+        public int Speed { get; }
 
         private int xCoordinate;
         public int XCoordinate
@@ -81,7 +47,7 @@ namespace GameOfLife
             {
                 if (value >= Grid.MaxWidth)
                 {
-                    xCoordinate = Grid.MaxWidth;
+                    xCoordinate = Grid.MaxWidth - 1;
                 }
                 else if (value <= 0)
                 {
@@ -101,7 +67,7 @@ namespace GameOfLife
             {
                 if (value >= Grid.MaxHeight)
                 {
-                    yCoordinate = Grid.MaxHeight;
+                    yCoordinate = Grid.MaxHeight - 1;
                 }
                 else if (value <= 0)
                 {
@@ -145,7 +111,7 @@ namespace GameOfLife
             Map[YCoordinate].RemoveAt(XCoordinate);
         }
 
-        public int Eat()
+        public int Eat(int foodPoints)
         {
             if (Map[YCoordinate][XCoordinate].Display == 'S')
             {
