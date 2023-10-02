@@ -45,11 +45,13 @@ public class Scullion : IAlive
 
     public void Move()
     {
-        for (var i = 0; i < Speed; i++)
-        {
-            XCoordinate += R.Next(-1, 1);
-            YCoordinate += R.Next(-1, 1);
-        }
+        var tiles = Grid.AbleToStepOn(Grid.AdjacentTiles(_xCoordinate, _yCoordinate), "GameOfLife.Classes.Scullion");
+        var from = Grid.Map[_yCoordinate, _xCoordinate];
+        var to = tiles[R.Next(0, tiles.Count)];
+        from.Content.Remove(this);
+        to.Content.Add(this);
+        XCoordinate = to.XCoordinate;
+        YCoordinate = to.YCoordinate;
     }
 
     private void DropCheese()

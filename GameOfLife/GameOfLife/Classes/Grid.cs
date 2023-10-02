@@ -24,11 +24,8 @@ public static class Grid
     
     public static List<Tile> AbleToStepOn(List<Tile> tiles, string entity)
     {
-        foreach (var tile in tiles)
-        {
-            if (tile.Content.Count >= 4 || tile.HasEntity(entity))
-                tiles.Remove(tile);
-        }
+        foreach (var tile in tiles.Where(tile => tile.Content.Count >= 4 || tile.HasEntity(entity)))
+            tiles.Remove(tile);
         return tiles;
     }
 }
