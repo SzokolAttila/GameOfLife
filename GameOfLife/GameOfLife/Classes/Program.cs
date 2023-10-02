@@ -1,1 +1,2 @@
-﻿
+﻿using GameOfLife.Classes;
+

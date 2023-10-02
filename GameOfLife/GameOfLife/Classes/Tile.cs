@@ -10,4 +10,6 @@ public class Tile
     {
         Content = new List<IEntity>(4);
     }
+
+    public bool HasEntity(string entity) => Content.Exists(x => x.GetType().ToString() == entity);
 }
