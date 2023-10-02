@@ -21,4 +21,14 @@ public static class Grid
             tiles.Add(Map[y + 1, x]);
         return tiles;
     } 
+    
+    public static List<Tile> AbleToStepOn(List<Tile> tiles, string entity)
+    {
+        foreach (var tile in tiles)
+        {
+            if (tile.Content.Count >= 4 || tile.HasEntity(entity))
+                tiles.Remove(tile);
+        }
+        return tiles;
+    }
 }
