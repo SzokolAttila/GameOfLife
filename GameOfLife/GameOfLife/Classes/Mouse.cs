@@ -1,4 +1,6 @@
 ﻿using GameOfLife.Interfaces;
+using System.Data;
+using System.Linq;
 
 namespace GameOfLife.Classes
 {
@@ -12,7 +14,7 @@ namespace GameOfLife.Classes
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
-            Grid.Map[y, x][x] = this;
+            Grid.Map[y, x].Content.Add(this);
         }
 
         private const int MaxFoodPoints = 7;
@@ -36,6 +38,8 @@ namespace GameOfLife.Classes
                 }
             }
         }
+
+        private int stunned = 0;
         public int TurnsLived { get; set; }
         public int Speed { get; }
 
@@ -82,24 +86,29 @@ namespace GameOfLife.Classes
 
         public char Display { get; init; }
 
+        private void Stun()
+        {
+            stunned++;
+        }
+
         public void Breed() // potential problem --> breeding twice
         {
-            if (Map[YCoordinate - 1][XCoordinate].Display == 'e' || Map[YCoordinate + 1][XCoordinate].Display == 'e' ||
-                Map[YCoordinate][XCoordinate - 1].Display == 'e' || Map[YCoordinate - 1][XCoordinate + 1].Display == 'e')
+            if (Grid.Map[YCoordinate - 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate + 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") ||
+                Grid.Map[YCoordinate,XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate - 1,XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
             {
-                if (Map[YCoordinate - 1][XCoordinate] == null)
+                if (!Grid.Map[YCoordinate - 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
                 {
                     new Mouse(XCoordinate, YCoordinate - 1);
                 }
-                else if (Map[YCoordinate + 1][XCoordinate] == null)
+                else if (!Grid.Map[YCoordinate + 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
                 {
                     new Mouse(XCoordinate, YCoordinate + 1);
                 }
-                else if (Map[YCoordinate][XCoordinate + 1] == null)
+                else if (!Grid.Map[YCoordinate,XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
                 {
                     new Mouse(XCoordinate + 1, YCoordinate);
                 }
-                else if (Map[YCoordinate][XCoordinate - 1] == null)
+                else if (!Grid.Map[YCoordinate,XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
                 {
                     new Mouse(XCoordinate - 1, YCoordinate);
                 }
@@ -108,37 +117,24 @@ namespace GameOfLife.Classes
 
         public void Death()
         {
-            Map[YCoordinate].RemoveAt(XCoordinate);
+            Grid.Map[YCoordinate,XCoordinate].Content.Remove(Grid.Map[YCoordinate, XCoordinate].Content.
+                Where(x=>x.GetType().ToString()=="GameOfLife.Classes.Mouse").First());
         }
 
-        public int Eat(int foodPoints)
+        public int Eat(int fp)
         {
-            if (Map[YCoordinate][XCoordinate].Display == 'S')
-            {
-                ((IEdible)Map[YCoordinate][XCoordinate]).Death();
-                return 1;
-            }
-            else if (Map[YCoordinate][XCoordinate].Display == 'E')
-            {
-                ((IEdible)Map[YCoordinate][XCoordinate]).Death();
-                return 2;
-            }
-            else if (Map[YCoordinate][XCoordinate].Display == 'P')
-            {
-                ((IEdible)Map[YCoordinate][XCoordinate]).Death();
-                return 3;
-            }
-            return 0;
+            FoodPoints += fp;
+            return FoodPoints;
         }
 
         private int[] ClosestCat()
         {
             int[] pos = new int[3];
-            for (int i = 0; i < Map.Count(); i++)
+            for (int i = 0; i < Grid.Map.GetLength(0); i++)
             {
-                for (int j = 0; j < Map[0].Count(); j++)
+                for (int j = 0; j < Grid.Map.GetLength(1); j++)
                 {
-                    if (Map[i][j].Display == 'c' || Map[i][j].Display == 'C')
+                    if (Grid.Map[i,j].Content.Select(x=>x.Display).Contains('c')|| Grid.Map[i, j].Content.Select(x => x.Display).Contains('C'))
                     {
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j);
                         if (Dist < pos[2])
@@ -154,19 +150,20 @@ namespace GameOfLife.Classes
         private int[] ClosestCheese()
         {
             int[] pos = new int[3];
-            for (int i = 0; i < Map.Count(); i++)
+            for (int i = 0; i < Grid.Map.GetLength(0); i++)
             {
-                for (int j = 0; j < Map[0].Count(); j++)
+                for (int j = 0; j < Grid.Map.GetLength(1); j++)
                 {
-                    if (Map[i][j].Display == 'S')
+                    if (Grid.Map[i,j].HasEntity("GameOfLife.Classes.Cheese"))
                     {
-                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j);
+                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - (((Cheese)Grid.Map[YCoordinate, XCoordinate].
+                            Content.Where(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese").First()).FoodPoints - 1);
                         if (Dist < pos[2])
                         {
                             pos = new int[] { i, j, Dist };
                         }
                     }
-                    else if (Map[i][j].Display == 'E')
+                    else if (Grid.Map[i, j].Content.Select(x => x.Display).Contains('E'))
                     {
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - 1;
                         if (Dist < pos[2])
@@ -174,7 +171,7 @@ namespace GameOfLife.Classes
                             pos = new int[] { i, j, Dist };
                         }
                     }
-                    else if (Map[i][j].Display == 'P')
+                    else if (Grid.Map[i, j].Content.Select(x => x.Display).Contains('P'))
                     {
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - 2;
                         if (Dist < pos[2])
@@ -187,6 +184,74 @@ namespace GameOfLife.Classes
             return pos;
         }
 
+        public void MoveFromCat(int[] cat)
+        {
+            if (cat[0] > YCoordinate && Grid.Map[YCoordinate - 1, XCoordinate].Content.Count() < 4)
+            {
+                YCoordinate--;
+            }
+            else if (cat[0] < YCoordinate && Grid.Map[YCoordinate + 1, XCoordinate].Content.Count() < 4)
+            {
+                YCoordinate++;
+            }
+            else if (cat[1] > XCoordinate && Grid.Map[YCoordinate, XCoordinate - 1].Content.Count() < 4)
+            {
+                XCoordinate--;
+            }
+            else if (Grid.Map[YCoordinate, XCoordinate + 1].Content.Count() < 4)
+            {
+                XCoordinate++;
+            }
+            else
+            {
+                DefMove();
+            }
+        }
+
+        public void MoveToCheese(int[] cheese)
+        {
+            if (cheese[0] > YCoordinate && !Grid.Map[YCoordinate + 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                YCoordinate++;
+            }
+            else if (cheese[0] < YCoordinate && !Grid.Map[YCoordinate - 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                YCoordinate--;
+            }
+            else if (cheese[1] > XCoordinate && !Grid.Map[YCoordinate, XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                XCoordinate++;
+            }
+            else if (!Grid.Map[YCoordinate, XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                XCoordinate--;
+            }
+            else
+            {
+                DefMove();
+            }
+        }
+
+        public void DefMove()
+        {
+            if (!Grid.Map[YCoordinate + 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                YCoordinate++;
+            }
+            else if (!Grid.Map[YCoordinate - 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                YCoordinate--;
+            }
+            else if (!Grid.Map[YCoordinate, XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                XCoordinate++;
+            }
+            else if (!Grid.Map[YCoordinate, XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                XCoordinate--;
+            }
+        }
+
         public void Move()
         {
             // public method which refreshes map by the positions?
@@ -194,50 +259,36 @@ namespace GameOfLife.Classes
             int[] cheese = ClosestCheese();
             if (cat[2] > cheese[2])
             {
-                if (cheese[0] > YCoordinate && Map[YCoordinate + 1][XCoordinate] == null)
-                {
-                    YCoordinate++;
-                }
-                else if (cheese[0] < YCoordinate && Map[YCoordinate - 1][XCoordinate] == null)
-                {
-                    YCoordinate--;
-                }
-                else if (cheese[1] > XCoordinate && Map[YCoordinate][XCoordinate + 1] == null)
-                {
-                    XCoordinate++;
-                }
-                else if (Map[YCoordinate][XCoordinate - 1] == null)
-                {
-                    XCoordinate--;
-                }
+                MoveToCheese(cheese);   
             }
             else
             {
-                if (cat[0] > YCoordinate && Map[YCoordinate - 1][XCoordinate] == null)
-                {
-                    YCoordinate--;
-                }
-                else if (cat[0] < YCoordinate && Map[YCoordinate + 1][XCoordinate] == null)
-                {
-                    YCoordinate++;
-                }
-                else if (cat[1] > XCoordinate && Map[YCoordinate][XCoordinate - 1] == null)
-                {
-                    XCoordinate--;
-                }
-                else if (Map[YCoordinate][XCoordinate + 1] == null)
-                {
-                    XCoordinate++;
-                }
+                MoveFromCat(cat);
             }
         }
 
         public void EndOfTurn()
         {
             FoodPoints--;
-            Eat();
-            Breed();
-            Move();
+            if (stunned>0)
+            {
+                if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
+                {
+                    Eat(((Cheese)Grid.Map[YCoordinate, XCoordinate].Content.Where(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese").First()).FoodPoints);
+                }
+                else
+                {
+                    Eat(0);
+                }
+                Breed();
+                Move();
+                stunned--;
+            }
+            if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
+            {
+                stunned++;
+            }
+            TurnsLived++;
         }
 
     }
