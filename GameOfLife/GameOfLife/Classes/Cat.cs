@@ -5,7 +5,6 @@ namespace GameOfLife.Classes
 {
     internal class Cat : IAnimals
     {
-        readonly List<Cat> Livecats = new List<Cat>();
         readonly List<string> catNames = new List<string>
         {
             "Csöpi","Pötyi","Kormos","Hópihe","Maxi"
@@ -34,13 +33,13 @@ namespace GameOfLife.Classes
             get => speed;
             set
             {
-                if (TurnsLived >= 5)
+                if (AdultKitten)
                 {
                     speed = 2;
                 }
                 else
                 {
-                    speed = 1;
+                    speed = value;
                 }
             }
         }
@@ -50,7 +49,7 @@ namespace GameOfLife.Classes
 
         public char Display { get; init; }
 
-        readonly private string name;
+        private string name;
         public string Name
         { 
             get=>name;
@@ -59,43 +58,99 @@ namespace GameOfLife.Classes
                 if (TurnsLived>=10)
                 {
                     int r = random.Next(0,catNames.Count);
-                    Name = catNames[r];
+                    name = catNames[r];
                 }
                 else
                 {
-                    Name = value;
+                    name = value;
                 }
             }
         }
         public bool AdultKitten => TurnsLived >= 5;
 
+        public List<Tile> AroundTiles(int xCoordinate, int yCoordinate)
+        {
+            List<Tile> list = new List<Tile>();
+            for (int i = -1; i < 2; i++)
+            {
+                list.Add(Grid.Map[XCoordinate+i, YCoordinate + 1]);
+            }
+            for (int i = -1; i < 2; i++)
+            {
+                list.Add(Grid.Map[XCoordinate + i, YCoordinate - 1]);
+            }
+            list.Add(Grid.Map[XCoordinate - 1, YCoordinate]);
+            list.Add(Grid.Map[XCoordinate + 1, YCoordinate]);
+            return list;
+        }
+        public void NewKittenPutDown(List<Tile> availableTiles)
+        {
+            Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
+            int newKittenXCoordinate = nextTile.XCoordinate;
+            int newKittenYCoordinate = nextTile.YCoordinate;
+            Grid.Map[XCoordinate, YCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
+        }
         public void Breed()
         {
-            foreach (var item in Livecats)
+            if (AdultKitten && Grid.Map[XCoordinate,YCoordinate+1].HasEntity("cat"))
             {
-                if ((item.XCoordinate==XCoordinate+1|| item.XCoordinate == XCoordinate - 1 && item.YCoordinate == YCoordinate + 1 || item.YCoordinate == YCoordinate - 1)
-                    && TurnsLived>=5 && item.TurnsLived>=5)
+                List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate,YCoordinate), "cat");
+                NewKittenPutDown(availableTiles);
+            }
+            else
+            {
+                if (AdultKitten && Grid.Map[XCoordinate + 1, YCoordinate].HasEntity("cat"))
                 {
-                    Cat littlecat = new Cat(XCoordinate,YCoordinate);
-                    Livecats.Add(littlecat);
+                    List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
+                    NewKittenPutDown(availableTiles);
+                }
+                else
+                {
+                    if (AdultKitten && Grid.Map[XCoordinate, YCoordinate - 1].HasEntity("cat"))
+                    {
+                        List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
+                        NewKittenPutDown(availableTiles);
+                    }
+                    else
+                    {
+                        if (AdultKitten && Grid.Map[XCoordinate-1, YCoordinate].HasEntity("cat"))
+                        {
+                            List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
+                            NewKittenPutDown(availableTiles);
+                        }
+                    }
                 }
             }
         }
 
         public void EndOfTurn()
         {
-            TurnsLived += 1;
+            FoodPoints--;
+            if (FoodPoints == 0)
+            {
+                Death();
+            }
+            else
+            {
+                Breed();
+                TurnsLived++;
+                Move();
+            }
         }
 
         public void Move()
         {
-            XCoordinate += speed;
-            YCoordinate += speed;
+            Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
+            List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
+            Tile nextTile =  availableTiles[random.Next(availableTiles.Count)];
+            XCoordinate = nextTile.XCoordinate;
+            YCoordinate = nextTile.YCoordinate;
+            Grid.Map[XCoordinate, YCoordinate].Content.Add(this);
         }
 
         public void Death()
         {
-            Livecats.Remove(this);
+            Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
         }
 
         public int Eat(int foodPoints)
