@@ -16,6 +16,8 @@ SpawnCats();
 SpawnScullions();
 DrawGrid();
 DrawEntities();
+Console.ReadKey();
+ClearEntities();
 
 void InitiateMap()
 {
@@ -100,7 +102,6 @@ void DrawGrid()
             Console.Write("|");
         }
     }
-    Console.SetCursorPosition(0, 50);
 }
 
 void DrawEntities()
@@ -147,5 +148,27 @@ void DrawEntities()
             }
         }
     }
-    Console.SetCursorPosition(0, 50);
+}
+
+void ClearEntities()
+{
+    for (var i = 0; i < Grid.MaxHeight; ++i)
+    {
+        for (var j = 0; j < Grid.MaxWidth; ++j)
+        {
+            var vOffSet = 0;
+            var hOffSet = 0;
+            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
+            {
+                if (k == 2)
+                {
+                    ++vOffSet;
+                    hOffSet = 0;
+                }
+                Console.SetCursorPosition(1 + j * 4 + hOffSet, 1 + i * 3 + vOffSet);
+                Console.Write(" ");
+                hOffSet += 2;
+            }
+        }
+    }
 }
