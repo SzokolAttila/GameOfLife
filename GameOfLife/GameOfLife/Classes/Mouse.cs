@@ -96,22 +96,8 @@ namespace GameOfLife.Classes
             if (Grid.Map[YCoordinate - 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate + 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") ||
                 Grid.Map[YCoordinate,XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate - 1,XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
             {
-                if (!Grid.Map[YCoordinate - 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
-                {
-                    new Mouse(XCoordinate, YCoordinate - 1);
-                }
-                else if (!Grid.Map[YCoordinate + 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
-                {
-                    new Mouse(XCoordinate, YCoordinate + 1);
-                }
-                else if (!Grid.Map[YCoordinate,XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
-                {
-                    new Mouse(XCoordinate + 1, YCoordinate);
-                }
-                else if (!Grid.Map[YCoordinate,XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
-                {
-                    new Mouse(XCoordinate - 1, YCoordinate);
-                }
+                List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
+                new Mouse(available.First().XCoordinate, available.First().YCoordinate);
             }
         }
 
@@ -133,7 +119,7 @@ namespace GameOfLife.Classes
             {
                 for (int j = 0; j < Grid.Map.GetLength(1); j++)
                 {
-                    if (Grid.Map[i,j].Content.Select(x=>x.Display).Contains('c')|| Grid.Map[i, j].Content.Select(x => x.Display).Contains('C'))
+                    if (Grid.Map[i,j].HasEntity("GameOfLife.Classes.Cat"))
                     {
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j);
                         if (Dist < pos[2])
@@ -162,22 +148,6 @@ namespace GameOfLife.Classes
                             pos = new int[] { i, j, Dist };
                         }
                     }
-                    else if (Grid.Map[i, j].Content.Select(x => x.Display).Contains('E'))
-                    {
-                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - 1;
-                        if (Dist < pos[2])
-                        {
-                            pos = new int[] { i, j, Dist };
-                        }
-                    }
-                    else if (Grid.Map[i, j].Content.Select(x => x.Display).Contains('P'))
-                    {
-                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - 2;
-                        if (Dist < pos[2])
-                        {
-                            pos = new int[] { i, j, Dist };
-                        }
-                    }
                 }
             }
             return pos;
@@ -185,19 +155,20 @@ namespace GameOfLife.Classes
 
         public void MoveFromCat(int[] cat)
         {
-            if (cat[0] > YCoordinate && Grid.Map[YCoordinate - 1, XCoordinate].Content.Count() < 4)
+            List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
+            if (cat[0] > YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate - 1).Count() > 0)
             {
                 YCoordinate--;
             }
-            else if (cat[0] < YCoordinate && Grid.Map[YCoordinate + 1, XCoordinate].Content.Count() < 4)
+            else if (cat[0] < YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate + 1).Count() > 0)
             {
                 YCoordinate++;
             }
-            else if (cat[1] > XCoordinate && Grid.Map[YCoordinate, XCoordinate - 1].Content.Count() < 4)
+            else if (cat[1] > XCoordinate && available.Where(x => x.XCoordinate == this.XCoordinate - 1).Count() > 0)
             {
                 XCoordinate--;
             }
-            else if (Grid.Map[YCoordinate, XCoordinate + 1].Content.Count() < 4)
+            else if (available.Where(x => x.XCoordinate == this.XCoordinate + 1).Count() > 0)
             {
                 XCoordinate++;
             }
@@ -209,19 +180,20 @@ namespace GameOfLife.Classes
 
         public void MoveToCheese(int[] cheese)
         {
-            if (cheese[0] > YCoordinate && !Grid.Map[YCoordinate + 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
+            if (cheese[0] > YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate + 1).Count() > 0)
             {
                 YCoordinate++;
             }
-            else if (cheese[0] < YCoordinate && !Grid.Map[YCoordinate - 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (cheese[0] < YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate - 1).Count() > 0)
             {
                 YCoordinate--;
             }
-            else if (cheese[1] > XCoordinate && !Grid.Map[YCoordinate, XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (cheese[1] > XCoordinate && available.Where(x => x.XCoordinate == this.XCoordinate + 1).Count() > 0)
             {
                 XCoordinate++;
             }
-            else if (!Grid.Map[YCoordinate, XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (available.Where(x => x.YCoordinate == this.XCoordinate - 1).Count() > 0)
             {
                 XCoordinate--;
             }
@@ -233,19 +205,20 @@ namespace GameOfLife.Classes
 
         public void DefMove()
         {
-            if (!Grid.Map[YCoordinate + 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
+            if (available.Where(x => x.YCoordinate == this.YCoordinate + 1).Count() > 0)
             {
                 YCoordinate++;
             }
-            else if (!Grid.Map[YCoordinate - 1, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (available.Where(x => x.YCoordinate == this.YCoordinate - 1).Count() > 0)
             {
                 YCoordinate--;
             }
-            else if (!Grid.Map[YCoordinate, XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (available.Where(x => x.XCoordinate == this.XCoordinate + 1).Count() > 0)
             {
                 XCoordinate++;
             }
-            else if (!Grid.Map[YCoordinate, XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse"))
+            else if (available.Where(x => x.XCoordinate == this.XCoordinate - 1).Count() > 0)
             {
                 XCoordinate--;
             }
@@ -285,7 +258,7 @@ namespace GameOfLife.Classes
             }
             if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
             {
-                stunned++;
+                Stun();
             }
             TurnsLived++;
         }
