@@ -1,5 +1,4 @@
-
-﻿using GameOfLife.Interfaces;
+using GameOfLife.Interfaces;
 
 
 namespace GameOfLife.Classes
@@ -14,36 +13,18 @@ namespace GameOfLife.Classes
         public Cat(int x, int y)
         {
             TurnsLived = 0;
-            MaxFoodPoints = 10;
             FoodPoints = 5;
-            Speed = 1;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'c';
             name = "";
-
         }
 
         public int TurnsLived { get;set; }
-        public int MaxFoodPoints { get;set; }
-        public int FoodPoints { get; set; }
+        private const int MaxFoodPoints = 10;
+        public int FoodPoints { get; private set; }
+        public int Speed => AdultKitten ? 2 : 1;
 
-        private int speed;
-        public int Speed
-        {
-            get => speed;
-            set
-            {
-                if (AdultKitten)
-                {
-                    speed = 2;
-                }
-                else
-                {
-                    speed = value;
-                }
-            }
-        }
         public int XCoordinate { get; private set; }
 
         public int YCoordinate { get; private set; }

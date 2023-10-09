@@ -11,10 +11,10 @@ namespace GameOfLife.Classes
             FoodPoints = 3;
             TurnsLived = 0;
             Speed = 1;
+            _stunned = 1;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
-            Grid.Map[y, x].Content.Add(this);
         }
 
         private const int MaxFoodPoints = 7;
@@ -39,7 +39,7 @@ namespace GameOfLife.Classes
             }
         }
 
-        private int stunned = 0;
+        private int _stunned;
         public int TurnsLived { get; set; }
         public int Speed { get; }
 
@@ -88,7 +88,7 @@ namespace GameOfLife.Classes
 
         private void Stun()
         {
-            stunned++;
+            _stunned++;
         }
 
         public void Breed() // potential problem --> breeding twice
@@ -242,7 +242,7 @@ namespace GameOfLife.Classes
         public void EndOfTurn()
         {
             FoodPoints--;
-            if (stunned>0)
+            if (_stunned>0)
             {
                 if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
                 {
@@ -254,7 +254,7 @@ namespace GameOfLife.Classes
                 }
                 Breed();
                 Move();
-                stunned--;
+                _stunned--;
             }
             if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
             {
