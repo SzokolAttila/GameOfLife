@@ -41,7 +41,6 @@ public class Scullion : IAlive
     }
 
     public char Display => 'K';
-    public int Speed { get; }
 
     public void Move()
     {
@@ -59,9 +58,8 @@ public class Scullion : IAlive
         if (!Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
             Grid.Map[YCoordinate, XCoordinate].Content.Add(new Cheese(YCoordinate, XCoordinate));
     }
-    public Scullion(int speed, int xPosition, int yPosition)
+    public Scullion(int xPosition, int yPosition)
     {
-        Speed = speed;
         XCoordinate = xPosition;
         YCoordinate = yPosition;
     }

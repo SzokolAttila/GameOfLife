@@ -2,7 +2,6 @@
 {
     internal interface IAlive : IEntity
     {
-        int Speed { get; }
         void Move();
     }
 }

@@ -20,9 +20,9 @@ namespace GameOfLife.Classes
             _name = "";
         }
 
-        public int TurnsLived { get;set; }
+        public int TurnsLived { get; set; }
         private const int MaxFoodPoints = 10;
-        public int FoodPoints { get; set; }
+        public int FoodPoints { get; private set; }
         public int Speed => AdultKitten ? 2 : 1;
         public int XCoordinate { get; private set; }
 
