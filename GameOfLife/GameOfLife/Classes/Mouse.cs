@@ -117,8 +117,7 @@ namespace GameOfLife.Classes
 
         public void Death()
         {
-            Grid.Map[YCoordinate,XCoordinate].Content.Remove(Grid.Map[YCoordinate, XCoordinate].Content.
-                Where(x=>x.GetType().ToString()=="GameOfLife.Classes.Mouse").First());
+            Grid.Map[YCoordinate,XCoordinate].Content.Remove(this);
         }
 
         public int Eat(int fp)

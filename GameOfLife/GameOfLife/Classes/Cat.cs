@@ -5,68 +5,49 @@ namespace GameOfLife.Classes
 {
     internal class Cat : IAnimals
     {
-        readonly List<string> catNames = new List<string>
+        private readonly List<string> _catNames = new List<string>
         {
             "Csöpi","Pötyi","Kormos","Hópihe","Maxi"
         };
-        static Random random = new Random();
+        private static readonly Random Random = new Random();
         public Cat(int x, int y)
         {
             TurnsLived = 0;
-            MaxFoodPoints = 10;
             FoodPoints = 5;
-            Speed = 1;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'c';
-            name = "";
-
+            _name = "";
         }
 
         public int TurnsLived { get;set; }
-        public int MaxFoodPoints { get;set; }
+        private const int MaxFoodPoints = 10;
         public int FoodPoints { get; set; }
-
-        private int speed;
-        public int Speed
-        {
-            get => speed;
-            set
-            {
-                if (AdultKitten)
-                {
-                    speed = 2;
-                }
-                else
-                {
-                    speed = value;
-                }
-            }
-        }
+        public int Speed => AdultKitten ? 2 : 1;
         public int XCoordinate { get; private set; }
 
         public int YCoordinate { get; private set; }
 
-        public char Display { get; init; }
+        public char Display { get; }
 
-        private string name;
+        private string _name;
         public string Name
         { 
-            get=>name;
+            get=>_name;
             set
             {
                 if (TurnsLived>=10)
                 {
-                    int r = random.Next(0,catNames.Count);
-                    name = catNames[r];
+                    var r = Random.Next(0,_catNames.Count);
+                    _name = _catNames[r];
                 }
                 else
                 {
-                    name = value;
+                    _name = value;
                 }
             }
         }
-        public bool AdultKitten => TurnsLived >= 5;
+        private bool AdultKitten => TurnsLived >= 5;
 
         public List<Tile> AroundTiles(int xCoordinate, int yCoordinate)
         {
@@ -85,7 +66,7 @@ namespace GameOfLife.Classes
         }
         public void NewKittenPutDown(List<Tile> availableTiles)
         {
-            Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
+            Tile nextTile = availableTiles[Random.Next(availableTiles.Count)];
             int newKittenXCoordinate = nextTile.XCoordinate;
             int newKittenYCoordinate = nextTile.YCoordinate;
             Grid.Map[XCoordinate, YCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
@@ -142,7 +123,7 @@ namespace GameOfLife.Classes
         {
             Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
             List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
-            Tile nextTile =  availableTiles[random.Next(availableTiles.Count)];
+            Tile nextTile =  availableTiles[Random.Next(availableTiles.Count)];
             XCoordinate = nextTile.XCoordinate;
             YCoordinate = nextTile.YCoordinate;
             Grid.Map[XCoordinate, YCoordinate].Content.Add(this);
