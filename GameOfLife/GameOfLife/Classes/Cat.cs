@@ -5,99 +5,122 @@ namespace GameOfLife.Classes
 {
     internal class Cat : IAnimals
     {
-        private readonly List<string> _catNames = new List<string>
+        readonly List<string> catNames = new List<string>
         {
             "Csöpi","Pötyi","Kormos","Hópihe","Maxi"
         };
-        private static readonly Random Random = new Random();
+        static Random random = new Random();
         public Cat(int x, int y)
         {
             TurnsLived = 0;
+            MaxFoodPoints = 10;
             FoodPoints = 5;
+            Speed = 1;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'c';
-            _name = "";
+            name = "";
+
         }
 
-        public int TurnsLived { get; set; }
-        private const int MaxFoodPoints = 10;
-        public int FoodPoints { get; private set; }
-        public int Speed => AdultKitten ? 2 : 1;
+        public int TurnsLived { get;set; }
+        public int MaxFoodPoints { get;set; }
+        public int FoodPoints { get; set; }
+
+        private int speed;
+        public int Speed
+        {
+            get => speed;
+            set
+            {
+                if (AdultKitten)
+                {
+                    speed = 2;
+                }
+                else
+                {
+                    speed = value;
+                }
+            }
+        }
         public int XCoordinate { get; private set; }
 
         public int YCoordinate { get; private set; }
 
-        public char Display { get; }
+        public char Display { get; init; }
 
-        private string _name;
+        private string name;
         public string Name
         { 
-            get=>_name;
+            get=>name;
             set
             {
                 if (TurnsLived>=10)
                 {
-                    var r = Random.Next(0,_catNames.Count);
-                    _name = _catNames[r];
+                    int r = random.Next(0,catNames.Count);
+                    name = catNames[r];
                 }
                 else
                 {
-                    _name = value;
+                    name = value;
                 }
             }
         }
         private bool AdultKitten => TurnsLived >= 5;
 
-        public List<Tile> AroundTiles(int xCoordinate, int yCoordinate)
+        public void NewKittenSpawn(List<Tile> availableTiles)
         {
-            List<Tile> list = new List<Tile>();
-            for (int i = -1; i < 2; i++)
-            {
-                list.Add(Grid.Map[XCoordinate+i, YCoordinate + 1]);
-            }
-            for (int i = -1; i < 2; i++)
-            {
-                list.Add(Grid.Map[XCoordinate + i, YCoordinate - 1]);
-            }
-            list.Add(Grid.Map[XCoordinate - 1, YCoordinate]);
-            list.Add(Grid.Map[XCoordinate + 1, YCoordinate]);
-            return list;
-        }
-        public void NewKittenPutDown(List<Tile> availableTiles)
-        {
-            Tile nextTile = availableTiles[Random.Next(availableTiles.Count)];
+            Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
             int newKittenXCoordinate = nextTile.XCoordinate;
             int newKittenYCoordinate = nextTile.YCoordinate;
             Grid.Map[XCoordinate, YCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
         }
+
+        private bool SearchForAdultCat(int xCoordinate, int yCoordinate)
+        {
+            int index = 0;
+            bool found = false;
+            while (!found && index< Grid.Map[xCoordinate, yCoordinate].Content.Count)
+            {
+                if (Grid.Map[xCoordinate, yCoordinate].Content[index].Display==1)
+                {
+                    found = true;
+                }
+                index++;
+            }
+            return found;
+        }
         public void Breed()
         {
-            if (AdultKitten && Grid.Map[XCoordinate,YCoordinate+1].HasEntity("cat"))
+            if (AdultKitten && Grid.Map[XCoordinate,YCoordinate+1].HasEntity("GameOfLife.Classes.Cat")
+                && SearchForAdultCat(XCoordinate, YCoordinate + 1))
             {
-                List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate,YCoordinate), "cat");
-                NewKittenPutDown(availableTiles);
+                List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate,YCoordinate), "GameOfLife.Classes.Cat");
+                NewKittenSpawn(availableTiles);
             }
             else
             {
-                if (AdultKitten && Grid.Map[XCoordinate + 1, YCoordinate].HasEntity("cat"))
+                if (AdultKitten && Grid.Map[XCoordinate + 1, YCoordinate].HasEntity("GameOfLife.Classes.Cat")
+                    && SearchForAdultCat(XCoordinate+1, YCoordinate))
                 {
-                    List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
-                    NewKittenPutDown(availableTiles);
+                    List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
+                    NewKittenSpawn(availableTiles);
                 }
                 else
                 {
-                    if (AdultKitten && Grid.Map[XCoordinate, YCoordinate - 1].HasEntity("cat"))
+                    if (AdultKitten && Grid.Map[XCoordinate, YCoordinate - 1].HasEntity("GameOfLife.Classes.Cat")
+                        && SearchForAdultCat(XCoordinate, YCoordinate-1))
                     {
-                        List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
-                        NewKittenPutDown(availableTiles);
+                        List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
+                        NewKittenSpawn(availableTiles);
                     }
                     else
                     {
-                        if (AdultKitten && Grid.Map[XCoordinate-1, YCoordinate].HasEntity("cat"))
+                        if (AdultKitten && Grid.Map[XCoordinate-1, YCoordinate].HasEntity("GameOfLife.Classes.Cat")
+                            && SearchForAdultCat(XCoordinate - 1, YCoordinate))
                         {
-                            List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
-                            NewKittenPutDown(availableTiles);
+                            List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
+                            NewKittenSpawn(availableTiles);
                         }
                     }
                 }
@@ -107,6 +130,18 @@ namespace GameOfLife.Classes
         public void EndOfTurn()
         {
             FoodPoints--;
+            if (Grid.Map[XCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            {
+                Mouse mouse = (Mouse)Grid.Map[XCoordinate, YCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Mouse")!;
+                Eat(mouse.FoodPoints/2);
+
+            }
+            if (Grid.Map[XCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
+            {
+                Eat(1);
+            }
+
+
             if (FoodPoints == 0)
             {
                 Death();
@@ -122,8 +157,8 @@ namespace GameOfLife.Classes
         public void Move()
         {
             Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
-            List<Tile> availableTiles = Grid.AbleToStepOn(AroundTiles(XCoordinate, YCoordinate), "cat");
-            Tile nextTile =  availableTiles[Random.Next(availableTiles.Count)];
+            List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
+            Tile nextTile =  availableTiles[random.Next(availableTiles.Count)];
             XCoordinate = nextTile.XCoordinate;
             YCoordinate = nextTile.YCoordinate;
             Grid.Map[XCoordinate, YCoordinate].Content.Add(this);
