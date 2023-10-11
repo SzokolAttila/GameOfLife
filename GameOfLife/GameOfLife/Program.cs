@@ -16,8 +16,43 @@ SpawnCats();
 SpawnScullions();
 DrawGrid();
 DrawEntities();
-Console.ReadKey();
 ClearEntities();
+
+while(Grid.NumberOfCats > 1 && Grid.NumberOfMice > 1)
+{
+    Console.CursorVisible = false;
+    Console.ReadKey(true);
+    for (int i = 0; i < Grid.MaxHeight; i++)
+    {
+        for (int j = 0; j < Grid.MaxWidth; j++)
+        {
+            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
+            {
+                switch (Grid.Map[i, j].Content[k].GetType().ToString())
+                {
+                    case "GameOfLife.Classes.Mouse":
+                        var mouse = (Mouse)Grid.Map[i, j].Content[k];
+                        mouse.EndOfTurn();
+                        break;
+                    case "GameOfLife.Classes.Scullion":
+                        var scullion = (Scullion)Grid.Map[i, j].Content[k];
+                        scullion.EndOfTurn();
+                        break;
+                    case "GameOfLife.Classes.Cat":
+                        var cat = (Cat)Grid.Map[i, j].Content[k];
+                        cat.EndOfTurn();
+                        break;
+                    case "GameOfLife.Classes.Cheese":
+                        var cheese = (Cheese)Grid.Map[i, j].Content[k];
+                        cheese.EndOfTurn();
+                        break;
+                }
+            }
+        }
+    }
+    ClearEntities();
+    DrawEntities();
+}
 
 void InitiateMap()
 {

@@ -19,17 +19,15 @@ public static class Grid
             tiles.Add(Map[y, x - 1]);
         if (y > 0)
             tiles.Add(Map[y - 1, x]);
-        if (x < MaxWidth - 1)
+        if (x < MaxHeight - 1)
             tiles.Add(Map[y, x + 1]);
-        if (y < MaxHeight - 1)
+        if (y < MaxWidth - 1)
             tiles.Add(Map[y + 1, x]);
         return tiles;
     } 
     
     public static List<Tile> AbleToStepOn(List<Tile> tiles, string entity)
     {
-        foreach (var tile in tiles.Where(tile => tile.HasEntity(entity)))
-            tiles.Remove(tile);
-        return tiles;
+        return tiles.Where(x => !x.HasEntity(entity)).ToList();
     }
 }

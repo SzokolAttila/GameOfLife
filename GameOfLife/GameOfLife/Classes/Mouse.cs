@@ -93,8 +93,13 @@ namespace GameOfLife.Classes
 
         public void Breed() // potential problem --> breeding twice
         {
-            if (Grid.Map[YCoordinate - 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate + 1,XCoordinate].HasEntity("GameOfLife.Classes.Mouse") ||
-                Grid.Map[YCoordinate,XCoordinate - 1].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[YCoordinate - 1,XCoordinate + 1].HasEntity("GameOfLife.Classes.Mouse"))
+            var canBreed = false;
+            foreach (var tile in Grid.AbleToStepOn(Grid.AdjacentTiles(xCoordinate, YCoordinate), "GameOfLife.Classes.Mouse"))
+            {
+                if (tile.HasEntity("GameOfLife.Classes.Mouse"))
+                    canBreed = true;
+            }
+            if (canBreed)
             {
                 List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
                 new Mouse(available.First().XCoordinate, available.First().YCoordinate);
@@ -135,14 +140,14 @@ namespace GameOfLife.Classes
         private int[] ClosestCheese()
         {
             int[] pos = new int[3];
-            for (int i = 0; i < Grid.Map.GetLength(0); i++)
+            for (int i = 0; i < Grid.MaxHeight; i++)
             {
-                for (int j = 0; j < Grid.Map.GetLength(1); j++)
+                for (int j = 0; j < Grid.MaxWidth; j++)
                 {
-                    if (Grid.Map[i,j].HasEntity("GameOfLife.Classes.Cheese"))
+                    if (Grid.Map[i, j].HasEntity("GameOfLife.Classes.Cheese"))
                     {
-                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - (((Cheese)Grid.Map[YCoordinate, XCoordinate].
-                            Content.Where(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese").First()).FoodPoints - 1);
+                        int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - (((Cheese)Grid.Map[i, j].
+                            Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese")!).FoodPoints - 1);
                         if (Dist < pos[2])
                         {
                             pos = new int[] { i, j, Dist };
@@ -246,11 +251,7 @@ namespace GameOfLife.Classes
             {
                 if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
                 {
-                    Eat(((Cheese)Grid.Map[YCoordinate, XCoordinate].Content.Where(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese").First()).FoodPoints);
-                }
-                else
-                {
-                    Eat(0);
+                    Eat(((Cheese)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese")!).FoodPoints);
                 }
                 Breed();
                 Move();

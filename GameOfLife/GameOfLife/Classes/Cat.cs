@@ -50,7 +50,7 @@ namespace GameOfLife.Classes
         }
         private bool AdultKitten => TurnsLived >= 5;
 
-        public void NewKittenSpawn(List<Tile> availableTiles)
+        public void SpawnNewKitten(List<Tile> availableTiles)
         {
             Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
             int newKittenXCoordinate = nextTile.XCoordinate;
@@ -74,36 +74,14 @@ namespace GameOfLife.Classes
         }
         public void Breed()
         {
-            if (AdultKitten && Grid.Map[XCoordinate,YCoordinate+1].HasEntity("GameOfLife.Classes.Cat")
-                && SearchForAdultCat(XCoordinate, YCoordinate + 1))
+
+            if (AdultKitten)
             {
-                List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate,YCoordinate), "GameOfLife.Classes.Cat");
-                NewKittenSpawn(availableTiles);
-            }
-            else
-            {
-                if (AdultKitten && Grid.Map[XCoordinate + 1, YCoordinate].HasEntity("GameOfLife.Classes.Cat")
-                    && SearchForAdultCat(XCoordinate+1, YCoordinate))
+                foreach (var tile in Grid.AdjacentTiles(XCoordinate, YCoordinate))
                 {
-                    List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
-                    NewKittenSpawn(availableTiles);
-                }
-                else
-                {
-                    if (AdultKitten && Grid.Map[XCoordinate, YCoordinate - 1].HasEntity("GameOfLife.Classes.Cat")
-                        && SearchForAdultCat(XCoordinate, YCoordinate-1))
+                    if (tile.HasEntity("GameOfLife.Classes.Cat") && SearchForAdultCat(tile.XCoordinate, tile.YCoordinate))
                     {
-                        List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
-                        NewKittenSpawn(availableTiles);
-                    }
-                    else
-                    {
-                        if (AdultKitten && Grid.Map[XCoordinate-1, YCoordinate].HasEntity("GameOfLife.Classes.Cat")
-                            && SearchForAdultCat(XCoordinate - 1, YCoordinate))
-                        {
-                            List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
-                            NewKittenSpawn(availableTiles);
-                        }
+                        SpawnNewKitten(Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat"));
                     }
                 }
             }
