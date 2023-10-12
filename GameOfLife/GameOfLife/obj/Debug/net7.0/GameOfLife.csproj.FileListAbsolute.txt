@@ -13,3 +13,17 @@ D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\refint\GameOfLife.dl
 D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.pdb
 D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.genruntimeconfig.cache
 D:\GitHub\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\ref\GameOfLife.dll
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\GameOfLife.exe
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\GameOfLife.deps.json
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\GameOfLife.runtimeconfig.json
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\GameOfLife.dll
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\GameOfLife.pdb
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.GeneratedMSBuildEditorConfig.editorconfig
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.AssemblyInfoInputs.cache
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.AssemblyInfo.cs
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.csproj.CoreCompileInputs.cache
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.dll
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\refint\GameOfLife.dll
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.pdb
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.genruntimeconfig.cache
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\ref\GameOfLife.dll

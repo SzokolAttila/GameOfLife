@@ -1,58 +1,132 @@
 ﻿using GameOfLife.Classes;
 
 var random = new Random();
-Grid.MaxHeight = 10;
-Grid.MaxWidth = 10;
-Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
-Grid.NumberOfCats = 2;
-Grid.NumberOfMice = 50;
-Grid.NumberOfScullions = 1;
-Grid.NumberOfCheeses = 80;
+Menu menu = new Menu();
+int selectedIndex = 0;
+string[] buttons = { "Új játék", "Magyarázat"};
 
-InitiateMap();
-SpawnCheeses();
-SpawnMice();
-SpawnCats();
-SpawnScullions();
-DrawGrid();
-DrawEntities();
-ClearEntities();
-
-while(Grid.NumberOfCats > 1 && Grid.NumberOfMice > 1)
+while (true)
 {
-    Console.CursorVisible = false;
-    Console.ReadKey(true);
-    for (int i = 0; i < Grid.MaxHeight; i++)
+    Console.Clear();
+    Console.WriteLine(menu.Title());
+    Console.WriteLine();
+
+    for (int i = 0; i < buttons.Length; i++)
     {
-        for (int j = 0; j < Grid.MaxWidth; j++)
+        if (i == selectedIndex)
         {
-            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
-            {
-                switch (Grid.Map[i, j].Content[k].GetType().ToString())
-                {
-                    case "GameOfLife.Classes.Mouse":
-                        var mouse = (Mouse)Grid.Map[i, j].Content[k];
-                        mouse.EndOfTurn();
-                        break;
-                    case "GameOfLife.Classes.Scullion":
-                        var scullion = (Scullion)Grid.Map[i, j].Content[k];
-                        scullion.EndOfTurn();
-                        break;
-                    case "GameOfLife.Classes.Cat":
-                        var cat = (Cat)Grid.Map[i, j].Content[k];
-                        cat.EndOfTurn();
-                        break;
-                    case "GameOfLife.Classes.Cheese":
-                        var cheese = (Cheese)Grid.Map[i, j].Content[k];
-                        cheese.EndOfTurn();
-                        break;
-                }
-            }
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
         }
+        Console.WriteLine(buttons[i]);
+        Console.ResetColor();
     }
-    ClearEntities();
-    DrawEntities();
+    Console.WriteLine();
+    Console.ForegroundColor= ConsoleColor.DarkGray;
+    Console.WriteLine("Kilépni 'Esc' gombbal tudsz.");
+    Console.ResetColor();
+    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+    switch (keyInfo.Key)
+    {
+        case ConsoleKey.UpArrow:
+            if (selectedIndex > 0)
+                selectedIndex--;
+            break;
+
+        case ConsoleKey.DownArrow:
+            if (selectedIndex < buttons.Length - 1)
+                selectedIndex++;
+            break;
+
+        case ConsoleKey.Enter:
+            Console.Clear();
+            if (selectedIndex ==0)
+            {
+                Console.Clear();
+                Console.WriteLine("Adja meg a következő adatokat:");
+                Console.Write("Pálya magassága: ");
+                int maxHeight = int.Parse(Console.ReadLine()!);
+                Grid.MaxHeight = maxHeight;
+                Console.Write("Pálya szélessége: ");
+                int maxWidth = int.Parse(Console.ReadLine()!);
+                Grid.MaxWidth = maxWidth;
+                Grid.MaxHeight = maxHeight;
+                Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
+                Console.Write("Macskák száma: ");
+                int catsNumber = int.Parse(Console.ReadLine()!);
+                Grid.NumberOfCats = catsNumber;
+                Console.Write("Egerek száma: ");
+                int miceNumber = int.Parse(Console.ReadLine()!);
+                Grid.NumberOfMice = miceNumber;
+                Console.Write("Konyhásnénik száma: ");
+                int scullionsNumber = int.Parse(Console.ReadLine()!);
+                Grid.NumberOfScullions = scullionsNumber;
+                Console.Write("Sajtok száma: ");
+                int cheesesNumber = int.Parse(Console.ReadLine()!);
+                Grid.NumberOfCheeses = cheesesNumber;
+                Console.Clear();
+
+                InitiateMap();
+                SpawnCheeses();
+                SpawnMice();
+                SpawnCats();
+                SpawnScullions();
+                DrawGrid();
+                DrawEntities();
+                ClearEntities();
+
+                while (Grid.NumberOfCats > 1 && Grid.NumberOfMice > 1)
+                {
+                    Console.CursorVisible = false;
+                    Console.ReadKey(true);
+                    for (int i = 0; i < Grid.MaxHeight; i++)
+                    {
+                        for (int j = 0; j < Grid.MaxWidth; j++)
+                        {
+                            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
+                            {
+                                switch (Grid.Map[i, j].Content[k].GetType().ToString())
+                                {
+                                    case "GameOfLife.Classes.Mouse":
+                                        var mouse = (Mouse)Grid.Map[i, j].Content[k];
+                                        mouse.EndOfTurn();
+                                        break;
+                                    case "GameOfLife.Classes.Scullion":
+                                        var scullion = (Scullion)Grid.Map[i, j].Content[k];
+                                        scullion.EndOfTurn();
+                                        break;
+                                    case "GameOfLife.Classes.Cat":
+                                        var cat = (Cat)Grid.Map[i, j].Content[k];
+                                        cat.EndOfTurn();
+                                        break;
+                                    case "GameOfLife.Classes.Cheese":
+                                        var cheese = (Cheese)Grid.Map[i, j].Content[k];
+                                        cheese.EndOfTurn();
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    ClearEntities();
+                    DrawEntities();
+                }
+
+            }
+            else if (selectedIndex==1)
+            {
+                Console.Clear();
+                Console.WriteLine("Magyarázat a játékhoz!");
+                Console.ReadKey(true);
+                Console.Clear();
+            }
+            break;
+
+        case ConsoleKey.Escape:
+            return;
+    }
 }
+
 
 void InitiateMap()
 {
