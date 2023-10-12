@@ -25,7 +25,7 @@ namespace GameOfLife.Classes
 
         public string Description()
         {
-            string charachters = "Karakterek: " +
+            string charachters = "Karakterek:\n" +
                 "\tSajtdarab: s\n" +
                 "\tFriss sajt: S\n" +
                 "\tÉrett sajt: E\n" +
@@ -33,8 +33,26 @@ namespace GameOfLife.Classes
                 "\tEgér: e\n" +
                 "\tKiscica: c\n" +
                 "\tNagycica: C\n" +
-                "\tKonyhás néni: K\n";
-            return "Asd";
+                "\tKonyhás néni: K";
+            string rounds = "Játékmenet: \n" +
+                "A következő körhöz nyomj le egy billentyűt. Körönként mozognak a karakterek, esznek, szaporodnak és meghalnak.\n";
+            string emptyRow = "\n\n";
+            string rules = "Szabályok:\n" +
+                "\t-A játékban négy entitás lesz, sajt, egér, macska és konyhásnéni\n" +
+                "\t-A konyhásnénin kívül mindenkinek van kajapontja, ami körönként 1-el csökken\n" +
+                "\t-A játéknak akkor van vége, ha vagy az összes egér, vagy az összes macska elpusztult.\n" +
+                "\t-Az entitások akkor esznek, hogyha olyan mezőn állnak, amit meg tudnak enni.\n" +
+                "\t-A sajtnak négy fázisa van: sajtdarab, friss sajt, érett sajt és penészes sajt\n" +
+                "\t-A friss sajt, az érett sajt és a penészes sajt elfogyasztható (1, 2 és 3 pontot adnak)\n" +
+                "\t-Az egér a sajtot eszi, hogyha van a mellette lévő (nem átlós) mezőn másik egér, szaporodik. (Egér kajapont / 2) kajapontot ér \n" +
+                "\t-Az egér alapból 3 kajaponttal kezd, és maximum 7 kajapontja lehet.\n" +
+                "\t-A macska egeret eszik, ha van mellette lévő (nem átlós) mezőn másik macska, szaporodik\n" +
+                "\t-A macska 5 kajaponttal kezd, és maximum 10 kajapontja lehet\n" +
+                "\t-A konyhásnéni a macskát megeteti (1 ponttal), valamint az egeret megüti, " +
+                "így az egér egy körig nem mozoghat. Ezen kívül friss sajtot szór a sajtdarabok helyére\n" +
+                "\t-Az egér és a konyhás 1 egységet mozoghat egy körben, a macska 1-2 egységet\n" +
+                "\t-A friss sajt körönként változik (érett sajt majd penészes sajt lesz)";
+            return charachters + emptyRow + rules + emptyRow + rounds;
         }
     }
 }

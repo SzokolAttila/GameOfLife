@@ -116,7 +116,11 @@ while (true)
             else if (selectedIndex==1)
             {
                 Console.Clear();
-                Console.WriteLine("Magyarázat a játékhoz!");
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("Magyarázat a játékhoz!\n");
+                Console.ResetColor();
+                Console.WriteLine(menu.Description());
                 Console.ReadKey(true);
                 Console.Clear();
             }
