@@ -77,12 +77,19 @@ namespace GameOfLife.Classes
 
             if (AdultKitten)
             {
+                var canBreed = false;
                 foreach (var tile in Grid.AdjacentTiles(XCoordinate, YCoordinate))
                 {
                     if (tile.HasEntity("GameOfLife.Classes.Cat") && SearchForAdultCat(tile.XCoordinate, tile.YCoordinate))
                     {
-                        SpawnNewKitten(Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat"));
+                        canBreed = true;
+                        break;
                     }
+                }
+                if (canBreed) 
+                {
+                    SpawnNewKitten(Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat"));
+                    Grid.NumberOfCats++;
                 }
             }
         }
@@ -127,6 +134,7 @@ namespace GameOfLife.Classes
         public void Death()
         {
             Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
+            Grid.NumberOfCats--;
         }
 
         public int Eat(int foodPoints)

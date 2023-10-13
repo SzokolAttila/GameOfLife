@@ -7,7 +7,7 @@ string[] buttons = { "Új játék", "Magyarázat"};
 
 while (true)
 {
-    Console.Clear();
+    Console.SetCursorPosition(0, 2);
     Console.WriteLine(menu.Title());
     Console.WriteLine();
 
@@ -74,9 +74,8 @@ while (true)
                 SpawnScullions();
                 DrawGrid();
                 DrawEntities();
-                ClearEntities();
 
-                while (Grid.NumberOfCats > 1 && Grid.NumberOfMice > 1)
+                while (Grid.NumberOfCats > 0 && Grid.NumberOfMice > 0)
                 {
                     Console.CursorVisible = false;
                     Console.ReadKey(true);
