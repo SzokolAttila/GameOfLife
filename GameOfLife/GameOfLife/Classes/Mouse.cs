@@ -94,7 +94,7 @@ namespace GameOfLife.Classes
         public void Breed() // potential problem --> breeding twice
         {
             var canBreed = false;
-            foreach (var tile in Grid.AbleToStepOn(Grid.AdjacentTiles(xCoordinate, YCoordinate), "GameOfLife.Classes.Mouse"))
+            foreach (var tile in Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse"))
             {
                 if (tile.HasEntity("GameOfLife.Classes.Mouse"))
                     canBreed = true;

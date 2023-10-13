@@ -55,7 +55,7 @@ namespace GameOfLife.Classes
             Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
             int newKittenXCoordinate = nextTile.XCoordinate;
             int newKittenYCoordinate = nextTile.YCoordinate;
-            Grid.Map[XCoordinate, YCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
+            Grid.Map[YCoordinate, XCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
         }
 
         private bool SearchForAdultCat(int xCoordinate, int yCoordinate)
@@ -90,13 +90,13 @@ namespace GameOfLife.Classes
         public void EndOfTurn()
         {
             FoodPoints--;
-            if (Grid.Map[XCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
             {
-                Mouse mouse = (Mouse)Grid.Map[XCoordinate, YCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Mouse")!;
+                Mouse mouse = (Mouse)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Mouse")!;
                 Eat(mouse.FoodPoints/2);
 
             }
-            if (Grid.Map[XCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
+            if (Grid.Map[YCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
             {
                 Eat(1);
             }
@@ -116,17 +116,17 @@ namespace GameOfLife.Classes
 
         public void Move()
         {
-            Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
+            Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
             List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
             Tile nextTile =  availableTiles[random.Next(availableTiles.Count)];
             XCoordinate = nextTile.XCoordinate;
             YCoordinate = nextTile.YCoordinate;
-            Grid.Map[XCoordinate, YCoordinate].Content.Add(this);
+            Grid.Map[YCoordinate, XCoordinate].Content.Add(this);
         }
 
         public void Death()
         {
-            Grid.Map[XCoordinate, YCoordinate].Content.Remove(this);
+            Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
         }
 
         public int Eat(int foodPoints)

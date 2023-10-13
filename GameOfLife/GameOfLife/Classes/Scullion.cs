@@ -46,7 +46,7 @@ public class Scullion : IAlive
     {
         var tiles = Grid.AbleToStepOn(Grid.AdjacentTiles(_xCoordinate, _yCoordinate), "GameOfLife.Classes.Scullion");
         var from = Grid.Map[_yCoordinate, _xCoordinate];
-        var to = tiles[R.Next(0, tiles.Count)];
+        var to = tiles[R.Next(tiles.Count)];
         from.Content.Remove(this);
         to.Content.Add(this);
         XCoordinate = to.XCoordinate;
@@ -56,7 +56,7 @@ public class Scullion : IAlive
     private void DropCheese()
     {
         if (!Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
-            Grid.Map[YCoordinate, XCoordinate].Content.Add(new Cheese(YCoordinate, XCoordinate));
+            Grid.Map[YCoordinate, XCoordinate].Content.Add(new Cheese(XCoordinate, YCoordinate));
     }
     public Scullion(int xPosition, int yPosition)
     {

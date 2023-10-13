@@ -2,12 +2,12 @@
 
 var random = new Random();
 Grid.MaxHeight = 10;
-Grid.MaxWidth = 10;
+Grid.MaxWidth = 20;
 Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
 Grid.NumberOfCats = 2;
-Grid.NumberOfMice = 50;
+Grid.NumberOfMice = 15;
 Grid.NumberOfScullions = 1;
-Grid.NumberOfCheeses = 80;
+Grid.NumberOfCheeses = 16;
 
 InitiateMap();
 SpawnCheeses();
@@ -15,8 +15,6 @@ SpawnMice();
 SpawnCats();
 SpawnScullions();
 DrawGrid();
-DrawEntities();
-ClearEntities();
 
 while(Grid.NumberOfCats > 1 && Grid.NumberOfMice > 1)
 {
@@ -193,7 +191,7 @@ void ClearEntities()
         {
             var vOffSet = 0;
             var hOffSet = 0;
-            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
+            for (var k = 0; k < 4; k++)
             {
                 if (k == 2)
                 {
