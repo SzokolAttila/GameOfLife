@@ -164,19 +164,19 @@ namespace GameOfLife.Classes
         public void MoveFromCat(int[] cat)
         {
             List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
-            if (cat[0] > YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate - 1).Count() > 0)
+            if (cat[0] > YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate - 1))
             {
                 PlaceToAnotherTile(0, -1);
             }
-            else if (cat[0] < YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate + 1).Count() > 0)
+            else if (cat[0] < YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate + 1))
             {
                 PlaceToAnotherTile(0, 1);
             }
-            else if (cat[1] > XCoordinate && available.Where(x => x.XCoordinate == this.XCoordinate - 1).Count() > 0)
+            else if (cat[1] > XCoordinate && available.Exists(x => x.XCoordinate == this.XCoordinate - 1))
             {
                 PlaceToAnotherTile(-1, 0);
             }
-            else if (available.Where(x => x.XCoordinate == this.XCoordinate + 1).Count() > 0)
+            else if (available.Exists(x => x.XCoordinate == this.XCoordinate + 1))
             {
                 PlaceToAnotherTile(1, 0);
             }
@@ -189,21 +189,21 @@ namespace GameOfLife.Classes
         public void MoveToCheese(int[] cheese)
         {
             List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
-            if (cheese[0] > YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate + 1).Count() > 0)
+            if (cheese[0] > YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate + 1))
             {
                 PlaceToAnotherTile(0, 1);
             }
-            else if (cheese[0] < YCoordinate && available.Where(x => x.YCoordinate == this.YCoordinate - 1).Count() > 0)
+            else if (cheese[0] < YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate - 1))
             {
                 PlaceToAnotherTile(0, -1);
             }
-            else if (cheese[1] > XCoordinate && available.Where(x => x.XCoordinate == this.XCoordinate + 1).Count() > 0)
+            else if (cheese[1] > XCoordinate && available.Exists(x => x.XCoordinate == this.XCoordinate + 1))
             {
                 PlaceToAnotherTile(1, 0);
             }
-            else if (available.Where(x => x.YCoordinate == this.XCoordinate - 1).Count() > 0)
+            else if (available.Exists(x => x.XCoordinate == this.XCoordinate - 1))
             {
-                PlaceToAnotherTile(0, -1);
+                PlaceToAnotherTile(-1, 0);
             }
             else
             {
@@ -261,6 +261,8 @@ namespace GameOfLife.Classes
             }
             if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
                 Stun();
+            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cat"))
+                Death();
             TurnsLived++;
         }
 

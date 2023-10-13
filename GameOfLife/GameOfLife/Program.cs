@@ -110,6 +110,7 @@ while (true)
                     ClearEntities();
                     DrawEntities();
                 }
+                Console.Clear();
 
             }
             else if (selectedIndex==1)
