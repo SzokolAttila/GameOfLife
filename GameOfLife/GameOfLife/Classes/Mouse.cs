@@ -257,7 +257,7 @@ namespace GameOfLife.Classes
                     Eat(((Cheese)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese")!).FoodPoints);
                 }
                 Breed();
-                Move();
+                Move(); 
             }
             if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
                 Stun();

@@ -235,27 +235,31 @@ void DrawEntities()
                 }
                 Console.SetCursorPosition(1 + j * 4 + hOffSet, 1 + i * 3 + vOffSet);
                 var display = ' ';
-                if (entity.GetType().ToString() == "GameOfLife.Classes.Mouse")
+                switch (entity.GetType().ToString())
                 {
-                    var mouse = (Mouse)entity;
-                    display = mouse.Display;
-                }
-                else if (entity.GetType().ToString() == "GameOfLife.Classes.Cheese")
-                {
-                    var cheese = (Cheese)entity;
-                    display = cheese.Display;
-                }
-                else if (entity.GetType().ToString() == "GameOfLife.Classes.Cat")
-                {
-                    var cat = (Cat)entity;
-                    display = cat.Display;
-                }
-                else if (entity.GetType().ToString() == "GameOfLife.Classes.Scullion")
-                {
-                    var scullion = (Scullion)entity;
-                    display = scullion.Display;
+                    case "GameOfLife.Classes.Mouse":
+                        var mouse = (Mouse)entity;
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        display = mouse.Display;
+                        break;
+                    case "GameOfLife.Classes.Cheese":
+                        var cheese = (Cheese)entity;
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        display = cheese.Display;
+                        break;
+                    case "GameOfLife.Classes.Cat":
+                        var cat = (Cat)entity;
+                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                        display = cat.Display;
+                        break;
+                    case "GameOfLife.Classes.Scullion":
+                        var scullion = (Scullion)entity;
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        display = scullion.Display;
+                        break;
                 }
                 Console.Write(display);
+                Console.ForegroundColor = ConsoleColor.White;
                 hOffSet += 2;
                 ++drawnEntities;
             }
