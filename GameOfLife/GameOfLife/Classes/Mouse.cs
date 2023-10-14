@@ -1,6 +1,7 @@
 ﻿using GameOfLife.Interfaces;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace GameOfLife.Classes
 {
@@ -16,6 +17,7 @@ namespace GameOfLife.Classes
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
+            HadMouse = false;
         }
 
         public Mouse(int x, int y, int stun)
@@ -27,9 +29,10 @@ namespace GameOfLife.Classes
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
+            HadMouse = false;
         }
 
-
+        public bool HadMouse { get; set; }
         private const int MaxFoodPoints = 7;
         private int _foodPoints;
         public int FoodPoints
@@ -98,25 +101,35 @@ namespace GameOfLife.Classes
         }
 
         public char Display { get; init; }
-
-        private void Stun()
+        public bool IsStunned => _stunned > 0;
+        private void Stun() => _stunned++;
+        private bool CanBreed()
         {
-            _stunned++;
+            foreach (var tile in Grid.AdjacentTiles(XCoordinate, YCoordinate).Where(x => x.HasEntity(GetType().ToString())))
+            {
+                var mouse = (Mouse)tile.Content.Find(x => x.GetType().ToString() == GetType().ToString())!;
+                if (!HadMouse && !mouse.HadMouse && !mouse.IsStunned)
+                {
+                    mouse.HadMouse = true;
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public void Breed() // potential problem --> breeding twice
+        public void Breed() 
         {
-            var canBreed = false;
-            foreach (var tile in Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse"))
+            if (Grid.AdjacentTiles(XCoordinate, YCoordinate).Exists(x => x.HasEntity(GetType().ToString())))
             {
-                if (tile.HasEntity("GameOfLife.Classes.Mouse"))
-                    canBreed = true;
-            }
-            if (canBreed)
-            {
-                List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
-                new Mouse(available.First().XCoordinate, available.First().YCoordinate, 1);
-                Grid.NumberOfMice++;
+                List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), GetType().ToString());
+                if (CanBreed() && available.Count > 0)
+                {
+                    var to = available[R.Next(available.Count)];
+                    to.Content.Add(new Mouse(to.XCoordinate, to.YCoordinate, 1));
+                    to.HasMouse = true;
+                    HadMouse = true;
+                    Grid.NumberOfMice++;
+                }
             }
         }
 
@@ -143,9 +156,7 @@ namespace GameOfLife.Classes
                     {
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j);
                         if (Dist < pos[2])
-                        {
                             pos = new int[] { i, j, Dist };
-                        }
                     }
                 }
             }
@@ -164,9 +175,7 @@ namespace GameOfLife.Classes
                         int Dist = Math.Abs(YCoordinate - i) + Math.Abs(XCoordinate - j) - (((Cheese)Grid.Map[i, j].
                             Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese")!).FoodPoints - 1);
                         if (Dist < pos[2])
-                        {
                             pos = new int[] { i, j, Dist };
-                        }
                     }
                 }
             }
@@ -177,57 +186,35 @@ namespace GameOfLife.Classes
         {
             List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
             if (cat[0] > YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate - 1))
-            {
                 PlaceToAnotherTile(0, -1);
-            }
             else if (cat[0] < YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate + 1))
-            {
                 PlaceToAnotherTile(0, 1);
-            }
             else if (cat[1] > XCoordinate && available.Exists(x => x.XCoordinate == this.XCoordinate - 1))
-            {
                 PlaceToAnotherTile(-1, 0);
-            }
             else if (available.Exists(x => x.XCoordinate == this.XCoordinate + 1))
-            {
                 PlaceToAnotherTile(1, 0);
-            }
             else
-            {
                 DefMove();
-            }
         }
 
         public void MoveToCheese(int[] cheese)
         {
             List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
             if (cheese[0] > YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate + 1))
-            {
                 PlaceToAnotherTile(0, 1);
-            }
             else if (cheese[0] < YCoordinate && available.Exists(x => x.YCoordinate == this.YCoordinate - 1))
-            {
                 PlaceToAnotherTile(0, -1);
-            }
             else if (cheese[1] > XCoordinate && available.Exists(x => x.XCoordinate == this.XCoordinate + 1))
-            {
                 PlaceToAnotherTile(1, 0);
-            }
             else if (available.Exists(x => x.XCoordinate == this.XCoordinate - 1))
-            {
                 PlaceToAnotherTile(-1, 0);
-            }
             else
-            {
                 DefMove();
-            }
         }
         private void PlaceToAnotherTile(int x, int y)
         {
-            var from = Grid.Map[YCoordinate, xCoordinate];
             var to = Grid.Map[YCoordinate + y, XCoordinate + x];
-            from.Content.Remove(this);
-            to.Content.Add(this);
+            to.HasMouse = true;
             XCoordinate = to.XCoordinate;
             YCoordinate = to.YCoordinate;
         }
@@ -236,10 +223,8 @@ namespace GameOfLife.Classes
             var tiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
             if(tiles.Count > 0)
             {
-                var from = Grid.Map[YCoordinate, XCoordinate];
                 var to = tiles[R.Next(tiles.Count)];
-                from.Content.Remove(this);
-                to.Content.Add(this);
+                to.HasMouse = true;
                 XCoordinate = to.XCoordinate;
                 YCoordinate = to.YCoordinate;
             }
@@ -251,33 +236,31 @@ namespace GameOfLife.Classes
             int[] cat = ClosestCat();
             int[] cheese = ClosestCheese();
             if (cat[2] > cheese[2])
-            {
                 MoveToCheese(cheese);   
-            }
             else
-            {
                 MoveFromCat(cat);
-            }
         }
 
         public void EndOfTurn()
         {
+            HadMouse = false;   
             FoodPoints--;
-            if (_stunned>0)
+            if (IsStunned)
                 _stunned--;
-            else 
+            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
+                Stun();
+            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cat"))
+            {
+                Death();
+                return;
+            }
+            if (!IsStunned) 
             {
                 if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cheese"))
-                {
                     Eat(((Cheese)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Cheese")!).FoodPoints);
-                }
                 Breed();
                 Move(); 
             }
-            if (Grid.Map[YCoordinate,XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
-                Stun();
-            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cat"))
-                Death();
             TurnsLived++;
         }
 

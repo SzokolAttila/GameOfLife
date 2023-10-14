@@ -24,7 +24,7 @@ public class Cheese : IEdible
     public void EndOfTurn()
     {
         FoodPoints++;
-        if(Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cat"))
+        if(Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
             Death();
     }
 

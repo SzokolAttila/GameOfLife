@@ -28,6 +28,6 @@ public static class Grid
     
     public static List<Tile> AbleToStepOn(List<Tile> tiles, string entity)
     {
-        return tiles.Where(x => !x.HasEntity(entity)).ToList();
+        return tiles.Where(x => !x.IsEntityLocated(entity)).ToList();
     }
 }

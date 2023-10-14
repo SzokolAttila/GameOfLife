@@ -134,8 +134,8 @@ while (true)
 
                 InitiateMap();
                 SpawnCheeses();
-                SpawnMice();
                 SpawnCats();
+                SpawnMice();
                 SpawnScullions();
                 DrawGrid();
                 DrawEntities();
@@ -173,11 +173,25 @@ while (true)
                             }
                         }
                     }
+                    for (int i = 0; i < Grid.MaxHeight; i++)
+                    {
+                        for (int j = 0; j < Grid.MaxWidth; j++)
+                        {
+                            var currentTile = Grid.Map[i, j].Content.OrderBy(x => x.GetType().ToString()).ToList();
+                            foreach (var entity in currentTile)
+                            {
+                                var to = Grid.Map[entity.YCoordinate, entity.XCoordinate];
+                                Grid.Map[i, j].Content.Remove(entity);
+                                to.Content.Add(entity);
+                            }
+                            Grid.Map[i, j].RestoreVariables();
+                        }
+                    }
                     ClearEntities();
                     DrawEntities();
                 }
+                Console.ReadKey(true);
                 Console.Clear();
-
             }
             else if (selectedIndex==1)
             {
@@ -228,7 +242,7 @@ void SpawnMice()
     {
         var x = random.Next(Grid.MaxWidth);
         var y = random.Next(Grid.MaxHeight);
-        if (Grid.Map[y, x].HasEntity("GameOfLife.Classes.Mouse")) 
+        if (Grid.Map[y, x].HasEntity("GameOfLife.Classes.Mouse") || Grid.Map[y, x].HasEntity("GameOfLife.Classes.Cat")) 
             continue;
         Grid.Map[y, x].Content.Add(new Mouse(x, y));
         ++currentNumber;
@@ -267,7 +281,7 @@ void DrawGrid()
 {
     for (var i = 0; i < Grid.MaxHeight + 1; ++i)
     {
-        for (var j = 0; j < Grid.MaxWidth * 4; ++j)
+        for (var j = 0; j < Grid.MaxWidth * 4 + 1; ++j)
         {
             Console.SetCursorPosition(j, i * 3);
             Console.Write("_"); 

@@ -13,15 +13,15 @@ namespace GameOfLife.Classes
         public Cat(int x, int y)
         {
             TurnsLived = 0;
-            FoodPoints = 8;
+            FoodPoints = 5;
             XCoordinate = x;
             YCoordinate = y;
-            Display = 'c';
             name = "";
+            HadKitten = false;
         }
-
+        public bool HadKitten { get; set; }
         public int TurnsLived { get;set; }
-        private const int MaxFoodPoints = 10;
+        private const int MaxFoodPoints = 8;
         public int FoodPoints { get; private set; }
         public int Speed => AdultKitten ? 2 : 1;
 
@@ -29,7 +29,7 @@ namespace GameOfLife.Classes
 
         public int YCoordinate { get; private set; }
 
-        public char Display { get; init; }
+        public char Display => AdultKitten ? 'C' : 'c';
 
         private string name;
         public string Name
@@ -55,22 +55,26 @@ namespace GameOfLife.Classes
             Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
             int newKittenXCoordinate = nextTile.XCoordinate;
             int newKittenYCoordinate = nextTile.YCoordinate;
+            nextTile.HasCat = true;
             Grid.Map[YCoordinate, XCoordinate].Content.Add(new Cat(newKittenXCoordinate, newKittenYCoordinate));
         }
 
         private bool SearchForAdultCat(int xCoordinate, int yCoordinate)
         {
             int index = 0;
-            bool found = false;
-            while (!found && index< Grid.Map[xCoordinate, yCoordinate].Content.Count)
+            while (index< Grid.Map[yCoordinate, xCoordinate].Content.
+                Count(x => x.Display == 'c' || x.Display == 'C'))
             {
-                if (Grid.Map[xCoordinate, yCoordinate].Content[index].Display==1)
+                var cat = (Cat)Grid.Map[yCoordinate, xCoordinate].Content.
+                    Where(x => x.Display == 'c' || x.Display == 'C').ToList()[index];
+                if (cat.AdultKitten && !cat.HadKitten && !HadKitten)
                 {
-                    found = true;
+                    cat.HadKitten = true;
+                    return true;
                 }
                 index++;
             }
-            return found;
+            return false;
         }
         public void Breed()
         {
@@ -86,9 +90,11 @@ namespace GameOfLife.Classes
                         break;
                     }
                 }
-                if (canBreed) 
+                if (canBreed && Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), 
+                    GetType().ToString()).Count > 0) 
                 {
                     SpawnNewKitten(Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat"));
+                    HadKitten = true;
                     Grid.NumberOfCats++;
                 }
             }
@@ -96,20 +102,20 @@ namespace GameOfLife.Classes
 
         public void EndOfTurn()
         {
+            HadKitten = false;
             if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
             {
                 Mouse mouse = (Mouse)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Mouse")!;
                 Eat(mouse.FoodPoints/2);
             }
             if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
-            {
                 Eat(1);
-            }
 
             FoodPoints--;
             if (FoodPoints == 0)
             {
                 Death();
+                return;
             }
             else
             {
@@ -124,13 +130,11 @@ namespace GameOfLife.Classes
             List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
             if (availableTiles.Count > 0)
             {
-                Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
                 Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
+                nextTile.HasCat = true;
                 XCoordinate = nextTile.XCoordinate;
                 YCoordinate = nextTile.YCoordinate;
-                Grid.Map[YCoordinate, XCoordinate].Content.Add(this);
             }
-            
         }
 
         public void Death()
