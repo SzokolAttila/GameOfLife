@@ -45,26 +45,91 @@ while (true)
             {
                 Console.Clear();
                 Console.WriteLine("Adja meg a következő adatokat:");
-                Console.Write("Pálya magassága: ");
-                int maxHeight = int.Parse(Console.ReadLine()!);
-                Grid.MaxHeight = maxHeight;
-                Console.Write("Pálya szélessége: ");
-                int maxWidth = int.Parse(Console.ReadLine()!);
-                Grid.MaxWidth = maxWidth;
-                Grid.MaxHeight = maxHeight;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Pálya magassága: ");
+                        int maxHeight = int.Parse(Console.ReadLine()!);
+                        Grid.MaxHeight = maxHeight;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Pálya szélessége: ");
+                        int maxWidth = int.Parse(Console.ReadLine()!);
+                        Grid.MaxWidth = maxWidth;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
                 Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
-                Console.Write("Macskák száma: ");
-                int catsNumber = int.Parse(Console.ReadLine()!);
-                Grid.NumberOfCats = catsNumber;
-                Console.Write("Egerek száma: ");
-                int miceNumber = int.Parse(Console.ReadLine()!);
-                Grid.NumberOfMice = miceNumber;
-                Console.Write("Konyhásnénik száma: ");
-                int scullionsNumber = int.Parse(Console.ReadLine()!);
-                Grid.NumberOfScullions = scullionsNumber;
-                Console.Write("Sajtok száma: ");
-                int cheesesNumber = int.Parse(Console.ReadLine()!);
-                Grid.NumberOfCheeses = cheesesNumber;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Macskák száma: ");
+                        int catsNumber = int.Parse(Console.ReadLine()!);
+                        Grid.NumberOfCats = catsNumber;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Egerek száma: ");
+                        int miceNumber = int.Parse(Console.ReadLine()!);
+                        Grid.NumberOfMice = miceNumber;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Konyhásnénik száma: ");
+                        int scullionsNumber = int.Parse(Console.ReadLine()!);
+                        Grid.NumberOfScullions = scullionsNumber;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Sajtok száma: ");
+                        int cheesesNumber = int.Parse(Console.ReadLine()!);
+                        Grid.NumberOfCheeses = cheesesNumber;
+                        break;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
                 Console.Clear();
 
                 InitiateMap();
@@ -83,24 +148,25 @@ while (true)
                     {
                         for (int j = 0; j < Grid.MaxWidth; j++)
                         {
-                            for (var k = 0; k < Grid.Map[i, j].Content.Count; k++)
+                            var currentTile = Grid.Map[i, j].Content.OrderBy(x => x.GetType().ToString()).ToList();
+                            for (var k = 0; k < currentTile.Count; k++)
                             {
-                                switch (Grid.Map[i, j].Content[k].GetType().ToString())
+                                switch (currentTile[k].GetType().ToString())
                                 {
                                     case "GameOfLife.Classes.Mouse":
-                                        var mouse = (Mouse)Grid.Map[i, j].Content[k];
+                                        var mouse = (Mouse)currentTile[k];
                                         mouse.EndOfTurn();
                                         break;
                                     case "GameOfLife.Classes.Scullion":
-                                        var scullion = (Scullion)Grid.Map[i, j].Content[k];
+                                        var scullion = (Scullion)currentTile[k];
                                         scullion.EndOfTurn();
                                         break;
                                     case "GameOfLife.Classes.Cat":
-                                        var cat = (Cat)Grid.Map[i, j].Content[k];
+                                        var cat = (Cat)currentTile[k];
                                         cat.EndOfTurn();
                                         break;
                                     case "GameOfLife.Classes.Cheese":
-                                        var cheese = (Cheese)Grid.Map[i, j].Content[k];
+                                        var cheese = (Cheese)currentTile[k];
                                         cheese.EndOfTurn();
                                         break;
                                 }

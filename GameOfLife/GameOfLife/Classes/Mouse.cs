@@ -9,14 +9,26 @@ namespace GameOfLife.Classes
         private readonly static Random R = new Random();
         public Mouse(int x, int y)
         {
-            FoodPoints = 5;
+            FoodPoints = 7;
             TurnsLived = 0;
             Speed = 1;
-            _stunned = 1;
+            _stunned = 0;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'e';
         }
+
+        public Mouse(int x, int y, int stun)
+        {
+            FoodPoints = 7;
+            TurnsLived = 0;
+            Speed = 1;
+            _stunned = stun;
+            XCoordinate = x;
+            YCoordinate = y;
+            Display = 'e';
+        }
+
 
         private const int MaxFoodPoints = 7;
         private int _foodPoints;
@@ -103,7 +115,7 @@ namespace GameOfLife.Classes
             if (canBreed)
             {
                 List<Tile> available = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
-                new Mouse(available.First().XCoordinate, available.First().YCoordinate);
+                new Mouse(available.First().XCoordinate, available.First().YCoordinate, 1);
                 Grid.NumberOfMice++;
             }
         }
@@ -222,12 +234,15 @@ namespace GameOfLife.Classes
         public void DefMove()
         {
             var tiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Mouse");
-            var from = Grid.Map[YCoordinate, XCoordinate];
-            var to = tiles[R.Next(tiles.Count)];
-            from.Content.Remove(this);
-            to.Content.Add(this);
-            XCoordinate = to.XCoordinate;
-            YCoordinate = to.YCoordinate;
+            if(tiles.Count > 0)
+            {
+                var from = Grid.Map[YCoordinate, XCoordinate];
+                var to = tiles[R.Next(tiles.Count)];
+                from.Content.Remove(this);
+                to.Content.Add(this);
+                XCoordinate = to.XCoordinate;
+                YCoordinate = to.YCoordinate;
+            }
         }
 
         public void Move()

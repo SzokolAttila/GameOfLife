@@ -13,7 +13,7 @@ namespace GameOfLife.Classes
         public Cat(int x, int y)
         {
             TurnsLived = 0;
-            FoodPoints = 5;
+            FoodPoints = 8;
             XCoordinate = x;
             YCoordinate = y;
             Display = 'c';
@@ -96,19 +96,17 @@ namespace GameOfLife.Classes
 
         public void EndOfTurn()
         {
-            FoodPoints--;
             if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
             {
                 Mouse mouse = (Mouse)Grid.Map[YCoordinate, XCoordinate].Content.Find(x => x.GetType().ToString() == "GameOfLife.Classes.Mouse")!;
                 Eat(mouse.FoodPoints/2);
-
             }
-            if (Grid.Map[YCoordinate, YCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
+            if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Scullion"))
             {
                 Eat(1);
             }
 
-
+            FoodPoints--;
             if (FoodPoints == 0)
             {
                 Death();
@@ -123,12 +121,16 @@ namespace GameOfLife.Classes
 
         public void Move()
         {
-            Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
             List<Tile> availableTiles = Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat");
-            Tile nextTile =  availableTiles[random.Next(availableTiles.Count)];
-            XCoordinate = nextTile.XCoordinate;
-            YCoordinate = nextTile.YCoordinate;
-            Grid.Map[YCoordinate, XCoordinate].Content.Add(this);
+            if (availableTiles.Count > 0)
+            {
+                Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
+                Tile nextTile = availableTiles[random.Next(availableTiles.Count)];
+                XCoordinate = nextTile.XCoordinate;
+                YCoordinate = nextTile.YCoordinate;
+                Grid.Map[YCoordinate, XCoordinate].Content.Add(this);
+            }
+            
         }
 
         public void Death()

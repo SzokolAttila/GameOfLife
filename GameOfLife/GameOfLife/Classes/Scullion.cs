@@ -36,8 +36,8 @@ public class Scullion : IAlive
 
     public void EndOfTurn()
     {
-        Move();
         DropCheese();
+        Move();
     }
 
     public char Display => 'K';
@@ -45,12 +45,15 @@ public class Scullion : IAlive
     public void Move()
     {
         var tiles = Grid.AbleToStepOn(Grid.AdjacentTiles(_xCoordinate, _yCoordinate), "GameOfLife.Classes.Scullion");
-        var from = Grid.Map[_yCoordinate, _xCoordinate];
-        var to = tiles[R.Next(tiles.Count)];
-        from.Content.Remove(this);
-        to.Content.Add(this);
-        XCoordinate = to.XCoordinate;
-        YCoordinate = to.YCoordinate;
+        if (tiles.Count > 0)
+        {
+            var from = Grid.Map[_yCoordinate, _xCoordinate];
+            var to = tiles[R.Next(tiles.Count)];
+            from.Content.Remove(this);
+            to.Content.Add(this);
+            XCoordinate = to.XCoordinate;
+            YCoordinate = to.YCoordinate;
+        }
     }
 
     private void DropCheese()
