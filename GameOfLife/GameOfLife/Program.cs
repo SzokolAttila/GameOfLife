@@ -49,46 +49,56 @@ while (true)
             {
                 Console.Clear();
                 Console.WriteLine("Adja meg a következő adatokat:");
+                int numberOfTiles;
+                do
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.Write("Pálya magassága: ");
+                            int maxHeight = int.Parse(Console.ReadLine()!);
+                            Grid.MaxHeight = maxHeight;
+                            break;
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+                    while (true)
+                    {
+                        try
+                        {
+                            int width;
+                            int maxWidth = Console.BufferWidth / 4 - 1;
+                            do
+                            {
+                                Console.Write($"Pálya szélessége (maximum: {maxWidth}): ");
+                                width = int.Parse(Console.ReadLine()!);
+                            } while (width > maxWidth);
+                            Grid.MaxWidth = width;
+                            break;
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+                    Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
+                    numberOfTiles = Grid.MaxWidth * Grid.MaxHeight;
+                } while (numberOfTiles<=2);
+                int numberOfPlaces = numberOfTiles * 4;
                 while (true)
                 {
                     try
                     {
-                        Console.Write("Pálya magassága: ");
-                        int maxHeight = int.Parse(Console.ReadLine()!);
-                        Grid.MaxHeight = maxHeight;
-                        break;
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
-                while (true)
-                {
-                    try
-                    {
-                        int width;
-                        int maxWidth = Console.BufferWidth / 4 - 1;
+                        int catsNumber;
                         do
                         {
-                            Console.Write($"Pálya szélessége (maximum: {maxWidth}): ");
-                            width = int.Parse(Console.ReadLine()!);
-                        } while (width > maxWidth);
-                        Grid.MaxWidth = width;
-                        break;
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
-                Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("Macskák száma: ");
-                        int catsNumber = int.Parse(Console.ReadLine()!);
+                            Console.Write($"Macskák száma (maximum: {numberOfTiles - 2}): ");
+                            catsNumber = int.Parse(Console.ReadLine()!);
+                        } while (catsNumber>numberOfTiles-2 || catsNumber<1);
                         Grid.NumberOfCats = catsNumber;
                         break;
                     }
@@ -101,8 +111,12 @@ while (true)
                 {
                     try
                     {
-                        Console.Write("Egerek száma: ");
-                        int miceNumber = int.Parse(Console.ReadLine()!);
+                        int miceNumber;
+                        do
+                        {
+                            Console.Write($"Egerek száma (maximum: {numberOfTiles - (Grid.NumberOfCats+1)}): ");
+                            miceNumber = int.Parse(Console.ReadLine()!);
+                        } while (miceNumber> numberOfTiles - (Grid.NumberOfCats + 1) || miceNumber<1);
                         Grid.NumberOfMice = miceNumber;
                         break;
                     }
@@ -115,9 +129,13 @@ while (true)
                 {
                     try
                     {
-                        Console.Write("Konyhásnénik száma: ");
-                        int scullionsNumber = int.Parse(Console.ReadLine()!);
-                        Grid.NumberOfScullions = scullionsNumber;
+                        int cheesesNumber;
+                        do
+                        {
+                            Console.Write($"Sajtok száma (maximum: {numberOfTiles - (Grid.NumberOfCats+Grid.NumberOfMice)}): ");
+                            cheesesNumber = int.Parse(Console.ReadLine()!);
+                        } while (cheesesNumber > numberOfTiles - (Grid.NumberOfCats + Grid.NumberOfMice) || cheesesNumber < 1);
+                        Grid.NumberOfCheeses = cheesesNumber;
                         break;
                     }
                     catch
@@ -129,9 +147,13 @@ while (true)
                 {
                     try
                     {
-                        Console.Write("Sajtok száma: ");
-                        int cheesesNumber = int.Parse(Console.ReadLine()!);
-                        Grid.NumberOfCheeses = cheesesNumber;
+                        int scullionsNumber;
+                        do
+                        {
+                            Console.Write($"Konyhásnénik száma (maximum: {numberOfTiles}): ");
+                            scullionsNumber = int.Parse(Console.ReadLine()!);
+                        } while (scullionsNumber < 0 || scullionsNumber > numberOfTiles);
+                        Grid.NumberOfScullions = scullionsNumber;
                         break;
                     }
                     catch
