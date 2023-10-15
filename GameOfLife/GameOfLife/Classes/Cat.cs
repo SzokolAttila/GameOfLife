@@ -5,6 +5,10 @@ namespace GameOfLife.Classes
 {
     internal class Cat : IAnimals
     {
+        public static int Dead = 0;
+        public static int Born = 0;
+        public static List<Cat> DeadCats = new List<Cat>();
+        private static List<string> ExistingNames = new List<string>();
         readonly List<string> catNames = new List<string>
         {
             "Csöpi","Pötyi","Kormos","Hópihe","Maxi"
@@ -33,19 +37,19 @@ namespace GameOfLife.Classes
 
         private string name;
         public string Name
-        { 
-            get=>name;
-            set
+        {
+            get
             {
-                if (TurnsLived>=10)
+                if (TurnsLived>=10 && name=="")
                 {
+
                     int r = random.Next(0,catNames.Count);
-                    name = catNames[r];
+                    string baseName = catNames[r];
+                    string fullName = $"{ExistingNames.Where(x => x.Contains(baseName)).Count() + 1}. {baseName}";
+                    name = fullName;
+                    return fullName;
                 }
-                else
-                {
-                    name = value;
-                }
+                return name;
             }
         }
         private bool AdultKitten => TurnsLived >= 5;
@@ -96,6 +100,7 @@ namespace GameOfLife.Classes
                     SpawnNewKitten(Grid.AbleToStepOn(Grid.AdjacentTiles(XCoordinate, YCoordinate), "GameOfLife.Classes.Cat"));
                     HadKitten = true;
                     Grid.NumberOfCats++;
+                    Born++;
                 }
             }
         }
@@ -123,6 +128,11 @@ namespace GameOfLife.Classes
                 TurnsLived++;
                 Move();
             }
+
+            if (Name!="")
+            {
+                ExistingNames.Add(Name);
+            }
         }
 
         public void Move()
@@ -141,6 +151,11 @@ namespace GameOfLife.Classes
         {
             Grid.Map[YCoordinate, XCoordinate].Content.Remove(this);
             Grid.NumberOfCats--;
+            Dead++;
+            if (Name!="")
+            {
+                DeadCats.Add(this);
+            }
         }
 
         public int Eat(int foodPoints)

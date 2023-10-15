@@ -8,6 +8,8 @@ namespace GameOfLife.Classes
     internal class Mouse : IAnimals
     {
         private readonly static Random R = new Random();
+        public static int Born = 0;
+        public static int Dead = 0;
         public Mouse(int x, int y)
         {
             FoodPoints = 7;
@@ -129,6 +131,7 @@ namespace GameOfLife.Classes
                     to.HasMouse = true;
                     HadMouse = true;
                     Grid.NumberOfMice++;
+                    Born++;
                 }
             }
         }
@@ -137,6 +140,7 @@ namespace GameOfLife.Classes
         {
             Grid.Map[YCoordinate,XCoordinate].Content.Remove(this);
             Grid.NumberOfMice--;
+            Dead++;
         }
 
         public int Eat(int fp)

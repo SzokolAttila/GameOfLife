@@ -187,7 +187,8 @@ while (true)
                             Grid.Map[i, j].RestoreVariables();
                         }
                     }
-                    ClearEntities();
+                    EndOfTurnSum();
+                    DrawGrid();
                     DrawEntities();
                 }
                 Console.ReadKey(true);
@@ -368,4 +369,39 @@ void ClearEntities()
             }
         }
     }
+}
+
+void EndOfTurnSum()
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.DarkBlue;
+    Console.Write("Macskák: ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($"Elpusztult {Cat.Dead} db és született {Cat.Born} db --> Összesen {Grid.NumberOfCats} db él");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Egerek: ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($"Elpusztult {Mouse.Dead} db és született {Mouse.Born} db --> Összesen {Grid.NumberOfMice} db él");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.Write("Sajtok: ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($"Megettek {Cheese.Eaten} darabot és lekerült {Cheese.Placed} db --> Összesen {Grid.NumberOfCheeses} db van a pályán");
+    Console.WriteLine("Nyomj entert a továbblépéshez!");
+    Console.ReadLine();
+
+    if (Cat.DeadCats.Count>0)
+    {
+        Console.WriteLine("In memoriam");
+        Console.WriteLine(string.Join("\t", Cat.DeadCats.Select(x=>$"{x.Name}, élt {x.TurnsLived} körig")));
+        Console.WriteLine("1 perc néma csend után nyomj entert, hogy továbblépj!");
+        Console.ReadLine();
+    }
+    Console.Clear();
+
+    Cat.Born = 0;
+    Cat.Dead = 0;
+    Mouse.Born = 0;
+    Mouse.Dead = 0;
+    Cheese.Placed = 0;
+    Cheese.Eaten = 0;
 }

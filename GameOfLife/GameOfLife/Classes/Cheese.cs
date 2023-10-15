@@ -4,6 +4,8 @@ namespace GameOfLife.Classes;
 
 public class Cheese : IEdible
 {
+    public static int Eaten = 0;
+    public static int Placed = 0;
     public char Display
     {
         get
@@ -41,7 +43,8 @@ public class Cheese : IEdible
 
     public void Death()
     {
-        FoodPoints = 0;
+        FoodPoints = 0;//Huh??
+        Eaten++;
     }
 
     public Cheese(int xCoordinate, int yCoordinate)
@@ -49,5 +52,6 @@ public class Cheese : IEdible
         XCoordinate = xCoordinate;
         YCoordinate = yCoordinate;
         FoodPoints = 0;
+        Placed++;
     }
 }
