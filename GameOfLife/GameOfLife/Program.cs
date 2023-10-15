@@ -67,16 +67,14 @@ while (true)
                 {
                     try
                     {
-                        Console.Write($"Pálya szélessége (maximum: {Console.BufferWidth / 4 - 1}): ");
-                        int maxWidth = int.Parse(Console.ReadLine()!);
-                        if (maxWidth<= Console.BufferWidth / 4 - 1)
+                        int width;
+                        int maxWidth = Console.BufferWidth / 4 - 1;
+                        do
                         {
-                            Grid.MaxWidth = maxWidth;
-                        }
-                        else
-                        {
-                            maxWidth = Console.BufferWidth / 4 - 1;
-                        }
+                            Console.Write($"Pálya szélessége (maximum: {maxWidth}): ");
+                            width = int.Parse(Console.ReadLine()!);
+                        } while (width > maxWidth);
+                        Grid.MaxWidth = width;
                         break;
                     }
                     catch
