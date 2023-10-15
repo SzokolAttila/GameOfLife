@@ -1,4 +1,5 @@
 ﻿using GameOfLife.Classes;
+using GameOfLife.Interfaces;
 
 var random = new Random();
 Menu menu = new Menu();
@@ -151,25 +152,7 @@ while (true)
                             var currentTile = Grid.Map[i, j].Content.OrderBy(x => x.GetType().ToString()).ToList();
                             for (var k = 0; k < currentTile.Count; k++)
                             {
-                                switch (currentTile[k].GetType().ToString())
-                                {
-                                    case "GameOfLife.Classes.Mouse":
-                                        var mouse = (Mouse)currentTile[k];
-                                        mouse.EndOfTurn();
-                                        break;
-                                    case "GameOfLife.Classes.Scullion":
-                                        var scullion = (Scullion)currentTile[k];
-                                        scullion.EndOfTurn();
-                                        break;
-                                    case "GameOfLife.Classes.Cat":
-                                        var cat = (Cat)currentTile[k];
-                                        cat.EndOfTurn();
-                                        break;
-                                    case "GameOfLife.Classes.Cheese":
-                                        var cheese = (Cheese)currentTile[k];
-                                        cheese.EndOfTurn();
-                                        break;
-                                }
+                                currentTile[k].EndOfTurn();
                             }
                         }
                     }
@@ -315,28 +298,20 @@ void DrawEntities()
                     hOffSet = 0;
                 }
                 Console.SetCursorPosition(1 + j * 4 + hOffSet, 1 + i * 3 + vOffSet);
-                var display = ' ';
+                var display = entity.Display;
                 switch (entity.GetType().ToString())
                 {
                     case "GameOfLife.Classes.Mouse":
-                        var mouse = (Mouse)entity;
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        display = mouse.Display;
                         break;
                     case "GameOfLife.Classes.Cheese":
-                        var cheese = (Cheese)entity;
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        display = cheese.Display;
                         break;
                     case "GameOfLife.Classes.Cat":
-                        var cat = (Cat)entity;
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
-                        display = cat.Display;
                         break;
                     case "GameOfLife.Classes.Scullion":
-                        var scullion = (Scullion)entity;
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        display = scullion.Display;
                         break;
                 }
                 Console.Write(display);
