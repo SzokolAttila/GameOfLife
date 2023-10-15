@@ -368,7 +368,7 @@ void EndOfTurnSum()
     if (Cat.DeadCats.Count>0)
     {
         Console.WriteLine("In memoriam");
-        Console.WriteLine(string.Join("\t", Cat.DeadCats.Select(x=>$"{x.Name}, élt {x.TurnsLived} körig")));
+        Console.WriteLine(string.Join("\n\t", Cat.DeadCats.Select(x=>$"{x.Name}, élt {x.TurnsLived} körig")));
         Console.WriteLine("1 perc néma csend után nyomj entert, hogy továbblépj!");
         Console.ReadLine();
     }
