@@ -11,6 +11,7 @@ while (true)
     Console.SetCursorPosition(0, 2);
     Console.WriteLine(menu.Title());
     Console.WriteLine();
+    Cat.DeadCats.Clear();
 
     for (int i = 0; i < buttons.Length; i++)
     {
