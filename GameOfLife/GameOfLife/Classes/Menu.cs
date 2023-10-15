@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -53,6 +54,17 @@ namespace GameOfLife.Classes
                 "\t-Az egér és a konyhás 1 egységet mozoghat egy körben, a macska 1-2 egységet\n" +
                 "\t-A friss sajt körönként változik (érett sajt majd penészes sajt lesz)";
             return charachters + emptyRow + rules + emptyRow + rounds;
+        }
+
+        public string TheEnd()
+        {
+            return "#######                                       \n" +
+                "   #    #    # ######    ###### #    # #####  \n" +
+                "   #    #    # #         #      ##   # #    # \n" +
+                "   #    ###### #####     #####  # #  # #    # \n" +
+                "   #    #    # #         #      #  # # #    # \n" +
+                "   #    #    # #         #      #   ## #    # \n" +
+                "   #    #    # ######    ###### #    # ##### ";
         }
     }
 }

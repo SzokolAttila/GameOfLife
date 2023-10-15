@@ -27,3 +27,4 @@ C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\refint\GameOf
 C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.pdb
 C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\GameOfLife.genruntimeconfig.cache
 C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\obj\Debug\net7.0\ref\GameOfLife.dll
+C:\Detti\12D\IKT\GameOfLife\GameOfLife\GameOfLife\bin\Debug\net7.0\achievements.txt

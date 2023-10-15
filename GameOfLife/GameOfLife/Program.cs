@@ -89,7 +89,6 @@ while (true)
                     Grid.Map = new Tile[Grid.MaxHeight, Grid.MaxWidth];
                     numberOfTiles = Grid.MaxWidth * Grid.MaxHeight;
                 } while (numberOfTiles<=2);
-                int numberOfPlaces = numberOfTiles * 4;
                 while (true)
                 {
                     try
@@ -171,7 +170,7 @@ while (true)
                 SpawnScullions();
                 DrawGrid();
                 DrawEntities();
-
+                int rounds = 0;
                 while (Grid.NumberOfCats > 0 && Grid.NumberOfMice > 0)
                 {
                     Console.CursorVisible = false;
@@ -201,9 +200,23 @@ while (true)
                             Grid.Map[i, j].RestoreVariables();
                         }
                     }
+                    rounds++;
                     EndOfTurnSum();
                     DrawGrid();
                     DrawEntities();
+                }
+                Console.Clear();
+                Console.WriteLine(menu.TheEnd());
+                Console.ForegroundColor= ConsoleColor.Red;
+                Console.WriteLine($"\n{rounds} kört éltél túl.");
+                Console.ResetColor();
+                if (Grid.NumberOfCats==0)
+                {
+                    Console.WriteLine("A macska faj halt ki.");
+                }
+                else
+                {
+                    Console.WriteLine("Az egér faj halt ki.");
                 }
                 while (Console.KeyAvailable)
                     Console.ReadKey(true);
