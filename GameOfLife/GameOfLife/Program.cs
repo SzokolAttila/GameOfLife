@@ -96,9 +96,9 @@ while (true)
                         int catsNumber;
                         do
                         {
-                            Console.Write($"Macskák száma (maximum: {numberOfTiles - 2}): ");
+                            Console.Write($"Macskák száma (maximum: {numberOfTiles - 1}): ");
                             catsNumber = int.Parse(Console.ReadLine()!);
-                        } while (catsNumber>numberOfTiles-2 || catsNumber<1);
+                        } while (catsNumber>numberOfTiles-1 || catsNumber<1);
                         Grid.NumberOfCats = catsNumber;
                         break;
                     }
@@ -114,9 +114,9 @@ while (true)
                         int miceNumber;
                         do
                         {
-                            Console.Write($"Egerek száma (maximum: {numberOfTiles - (Grid.NumberOfCats+1)}): ");
+                            Console.Write($"Egerek száma (maximum: {numberOfTiles - Grid.NumberOfCats}): ");
                             miceNumber = int.Parse(Console.ReadLine()!);
-                        } while (miceNumber> numberOfTiles - (Grid.NumberOfCats + 1) || miceNumber<1);
+                        } while (miceNumber> numberOfTiles - Grid.NumberOfCats || miceNumber<1);
                         Grid.NumberOfMice = miceNumber;
                         break;
                     }
@@ -132,9 +132,9 @@ while (true)
                         int cheesesNumber;
                         do
                         {
-                            Console.Write($"Sajtok száma (maximum: {numberOfTiles - (Grid.NumberOfCats+Grid.NumberOfMice)}): ");
+                            Console.Write($"Sajtok száma (maximum: {numberOfTiles}): ");
                             cheesesNumber = int.Parse(Console.ReadLine()!);
-                        } while (cheesesNumber > numberOfTiles - (Grid.NumberOfCats + Grid.NumberOfMice) || cheesesNumber < 1);
+                        } while (cheesesNumber < 1 || cheesesNumber > numberOfTiles);
                         Grid.NumberOfCheeses = cheesesNumber;
                         break;
                     }
