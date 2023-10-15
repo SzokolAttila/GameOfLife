@@ -4,7 +4,8 @@ using GameOfLife.Interfaces;
 var random = new Random();
 Menu menu = new Menu();
 int selectedIndex = 0;
-string[] buttons = { "Új játék", "Magyarázat"};
+string[] buttons = { "Új játék", "Magyarázat", "Küldetések"};
+Achievements.Initiate("achievements.txt");
 
 while (true)
 {
@@ -222,9 +223,23 @@ while (true)
                 Console.ReadKey(true);
                 Console.Clear();
             }
+            else if (selectedIndex==2)
+            {
+                Console.Clear();
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("A játék küldetései:\n");
+                Console.ResetColor();
+                Console.WriteLine(Achievements.ListCollection());
+                while (Console.KeyAvailable)
+                    Console.ReadKey(true);
+                Console.ReadKey(true);
+                Console.Clear();
+            }
             break;
 
         case ConsoleKey.Escape:
+            Achievements.Save("achievements.txt");
             return;
     }
 }
@@ -399,6 +414,7 @@ void EndOfTurnSum()
     Console.Write("Konyhásnénik: ");
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine($"Megetettek {Scullion.CatsFed} macskát és leütöttek {Scullion.MiceStunned} egeret --> Összesen {Grid.NumberOfScullions} db van a pályán");
+    Console.WriteLine($"\n{Achievements.CheckAll()}");
     Console.WriteLine("Nyomj egy gombot a továbblépéshez!");
     while (Console.KeyAvailable)
         Console.ReadKey(true);

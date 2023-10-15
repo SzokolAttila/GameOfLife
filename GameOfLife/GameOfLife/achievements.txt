@@ -1,0 +1,7 @@
+Macskás néni;Nyerjenek a macskák!;0
+Egerek ura;Nyerjenek az egerek!;0
+Sajtimádó;Legyen MINDENHOL sajt!;0
+Egértanya;A pálya több, mint felét egerek lepjék el!;0
+Macskafarm;A pálya több, mint felén macskák vadásszanak!;0
+Etető kéz;Mindegyik konyhás etessen meg ebben a körben egy macskát!;0
+Agresszor;Mindegyik konyhás üssön meg ebben a körben egy egeret!;0
