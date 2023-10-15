@@ -5,7 +5,8 @@ namespace GameOfLife.Classes;
 public class Scullion : IAlive
 {
     private static readonly Random R = new();
-
+    public static int MiceStunned = 0;
+    public static int CatsFed = 0;
     private int _xCoordinate;
     public int XCoordinate
     {
@@ -36,6 +37,10 @@ public class Scullion : IAlive
 
     public void EndOfTurn()
     {
+        if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Mouse"))
+            MiceStunned++;
+        if (Grid.Map[YCoordinate, XCoordinate].HasEntity("GameOfLife.Classes.Cat"))
+            CatsFed++;
         DropCheese();
         Move();
     }

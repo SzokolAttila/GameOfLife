@@ -364,10 +364,14 @@ void EndOfTurnSum()
     Console.Write("Egerek: ");
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine($"Elpusztult {Mouse.Dead} db és született {Mouse.Born} db --> Összesen {Grid.NumberOfMice} db él");
-    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.Write("Sajtok: ");
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine($"Megettek {Cheese.Eaten} darabot és lekerült {Cheese.Placed} db --> Összesen {Grid.NumberOfCheeses} db van a pályán");
+    Console.ForegroundColor = ConsoleColor.DarkGreen;
+    Console.Write("Konyhásnénik: ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($"Megetettek {Scullion.CatsFed} macskát és leütöttek {Scullion.MiceStunned} egeret --> Összesen {Grid.NumberOfScullions} db van a pályán");
     Console.WriteLine("Nyomj egy gombot a továbblépéshez!");
     while (Console.KeyAvailable)
         Console.ReadKey(true);
@@ -384,6 +388,8 @@ void EndOfTurnSum()
     }
     Console.Clear();
 
+    Scullion.CatsFed = 0;
+    Scullion.MiceStunned = 0;
     Cat.Born = 0;
     Cat.Dead = 0;
     Mouse.Born = 0;
