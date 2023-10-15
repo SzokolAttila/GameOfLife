@@ -27,6 +27,8 @@ while (true)
     Console.ForegroundColor= ConsoleColor.DarkGray;
     Console.WriteLine("Kilépni 'Esc' gombbal tudsz.");
     Console.ResetColor();
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
     ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
     switch (keyInfo.Key)
@@ -175,6 +177,8 @@ while (true)
                     DrawGrid();
                     DrawEntities();
                 }
+                while (Console.KeyAvailable)
+                    Console.ReadKey(true);
                 Console.ReadKey(true);
                 Console.Clear();
             }
@@ -186,6 +190,8 @@ while (true)
                 Console.WriteLine("Magyarázat a játékhoz!\n");
                 Console.ResetColor();
                 Console.WriteLine(menu.Description());
+                while (Console.KeyAvailable)
+                    Console.ReadKey(true);
                 Console.ReadKey(true);
                 Console.Clear();
             }
@@ -362,15 +368,19 @@ void EndOfTurnSum()
     Console.Write("Sajtok: ");
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine($"Megettek {Cheese.Eaten} darabot és lekerült {Cheese.Placed} db --> Összesen {Grid.NumberOfCheeses} db van a pályán");
-    Console.WriteLine("Nyomj entert a továbblépéshez!");
-    Console.ReadLine();
+    Console.WriteLine("Nyomj egy gombot a továbblépéshez!");
+    while (Console.KeyAvailable)
+        Console.ReadKey(true);
+    Console.ReadKey(true);
 
     if (Cat.DeadCats.Count>0)
     {
         Console.WriteLine("In memoriam");
-        Console.WriteLine(string.Join("\n\t", Cat.DeadCats.Select(x=>$"{x.Name}, élt {x.TurnsLived} körig")));
-        Console.WriteLine("1 perc néma csend után nyomj entert, hogy továbblépj!");
-        Console.ReadLine();
+        Console.WriteLine(string.Join("\n", Cat.DeadCats.Select(x=>$"{x.Name}, élt {x.TurnsLived} körig")));
+        Console.WriteLine("1 perc néma csend után nyomj egy gombot, hogy továbblépj!");
+        while (Console.KeyAvailable)
+            Console.ReadKey(true);
+        Console.ReadKey(true);
     }
     Console.Clear();
 
