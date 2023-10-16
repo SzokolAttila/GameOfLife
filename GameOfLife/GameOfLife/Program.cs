@@ -57,8 +57,12 @@ while (true)
                     {
                         try
                         {
-                            Console.Write("Pálya magassága: ");
-                            int maxHeight = int.Parse(Console.ReadLine()!);
+                            int maxHeight;
+                            do
+                            {
+                                Console.Write("Pálya magassága: ");
+                                maxHeight = int.Parse(Console.ReadLine()!);
+                            } while (maxHeight<1);
                             Grid.MaxHeight = maxHeight;
                             break;
                         }
@@ -77,7 +81,7 @@ while (true)
                             {
                                 Console.Write($"Pálya szélessége (maximum: {maxWidth}): ");
                                 width = int.Parse(Console.ReadLine()!);
-                            } while (width > maxWidth);
+                            } while (width > maxWidth && width<1);
                             Grid.MaxWidth = width;
                             break;
                         }
