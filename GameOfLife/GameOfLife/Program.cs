@@ -284,7 +284,6 @@ void SpawnCheeses()
         ++currentNumber;
     }
 }
-
 void SpawnMice()
 {
     var currentNumber = 0;
@@ -389,28 +388,6 @@ void DrawEntities()
     }
 }
 
-void ClearEntities()
-{
-    for (var i = 0; i < Grid.MaxHeight; ++i)
-    {
-        for (var j = 0; j < Grid.MaxWidth; ++j)
-        {
-            var vOffSet = 0;
-            var hOffSet = 0;
-            for (var k = 0; k < 4; k++)
-            {
-                if (k == 2)
-                {
-                    ++vOffSet;
-                    hOffSet = 0;
-                }
-                Console.SetCursorPosition(1 + j * 4 + hOffSet, 1 + i * 3 + vOffSet);
-                Console.Write(" ");
-                hOffSet += 2;
-            }
-        }
-    }
-}
 
 void EndOfTurnSum()
 {
